@@ -347,6 +347,18 @@
             line-height: 1.4;
         }
 
+        .blocked-warning {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--danger);
+            color: #fca5a5;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            text-align: center;
+            font-weight: 600;
+        }
+
         .modal {
             position: absolute;
             top: 0;
@@ -468,8 +480,9 @@
                 <div class="welcome-screen">
                     <h1 class="welcome-title">Willkommen im Netz</h1>
                     <div class="welcome-desc">
-                        Du bist auf Social Media unterwegs und wirst mit 10 verschiedenen Behauptungen konfrontiert – von einfach bis extrem schwer (inklusive subtiler Propaganda-Tricks und Halbwahrheiten).<br><br>
-                        Du kannst Beiträge <b>Teilen</b>, <b>Überprüfen</b> oder <b>Ignorieren</b>. Pass auf: Falsche Entscheidungen haben Konsequenzen für deine Filterblase!
+                        Du bist auf Social Media unterwegs und wirst mit 10 verschiedenen Behauptungen konfrontiert – von einfach bis extrem schwer.<br><br>
+                        Zwischendurch schreiben dich <b>Mama</b> (anfällig), <b>Opa</b> (propaganda-gefangen), <b>Dad</b> (meistens sicher), deine <b>Schwester</b> (immun & warnend) oder dein <b>bester Freund</b> (neutral/egal) an!<br><br>
+                        ⚠️ <b>Achtung:</b> Wenn du zu oft Falschmeldungen verbreitest, ziehst du dich tiefer in die Filterblase – der Algorithmus schränkt dann deine Möglichkeiten zur Quellenprüfung ein!
                     </div>
                     <div class="input-group">
                         <label for="username">Dein Vorname oder Nutzername:</label>
@@ -509,7 +522,7 @@
             <!-- CHAT SCREEN -->
             <div class="screen" id="screen-chat">
                 <div style="margin-bottom: 12px; font-weight: 600; font-size: 0.9rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
-                    💬 Nachricht von <span id="chat-sender-name" style="color: var(--text);">Figur</span>
+                    💬 Nachricht von <span id="chat-sender-name" style="color: var(--text);">Person</span>
                 </div>
                 
                 <div class="chat-box" id="chat-box">
@@ -567,8 +580,8 @@
                     { author: "Tim", text: "Wird eh wieder gelöscht von denen da oben!" }
                 ],
                 options: [
-                    { text: "📤 Teilen", bias: "propaganda", label: "Auf plumpen Fake reingefallen", feedback: "💡 <b>Analyse:</b> Plumper Fake mit Panikmache. Wer hier teilt, fällt auf billige Tricks rein." },
-                    { text: "👁️ Ignorieren", bias: "neutral", label: "Platten Fake ignoriert", feedback: "💡 <b>Analyse:</b> Richtig erkannt und weggedrückt." }
+                    { text: "📤 Teilen", bias: "propaganda", isError: true, label: "Auf plumpen Fake reingefallen", feedback: "💡 <b>Analyse:</b> Plumper Fake mit Panikmache. Wer hier teilt, fällt auf billige Tricks rein." },
+                    { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Platten Fake ignoriert", feedback: "💡 <b>Analyse:</b> Richtig erkannt und weggedrückt." }
                 ]
             },
             {
@@ -582,8 +595,8 @@
                     { author: "Klaus", text: "Hoffentlich stimmts diesmal." }
                 ],
                 options: [
-                    { text: "📤 Teilen", bias: "neutral", label: "Harmlose Info geteilt", feedback: "💡 <b>Analyse:</b> Völlig harmloser und wahrer Beitrag." },
-                    { text: "👁️ Ignorieren", bias: "neutral", label: "Wetter ignoriert", feedback: "💡 <b>Analyse:</b> Auch okay, kein Schaden." }
+                    { text: "📤 Teilen", bias: "neutral", isError: false, label: "Harmlose Info geteilt", feedback: "💡 <b>Analyse:</b> Völlig harmloser und wahrer Beitrag." },
+                    { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Wetter ignoriert", feedback: "💡 <b>Analyse:</b> Auch okay, kein Schaden." }
                 ]
             },
             {
@@ -597,8 +610,8 @@
                     { author: "Ute", text: "Danke für den Tipp, wird probiert." }
                 ],
                 options: [
-                    { text: "📤 Teilen", bias: "propaganda", label: "Halbwahrheit verbreitet", typ: "fake", feedback: "💡 <b>Analyse:</b> Klassische Halbwahrheit (Gesund, aber heilt keine Krankheiten zu 100%). Wer das ungeprüft teilt, streut medizinische Mythen." },
-                    { text: "👁️ Ignorieren", bias: "neutral", label: "Gesundheits-Mythos ignoriert", feedback: "💡 <b>Analyse:</b> Gut ignoriert, da wissenschaftlich unbelegt." }
+                    { text: "📤 Teilen", bias: "propaganda", isError: true, label: "Halbwahrheit verbreitet", feedback: "💡 <b>Analyse:</b> Klassische Halbwahrheit. Wer das ungeprüft teilt, streut medizinische Mythen." },
+                    { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Gesundheits-Mythos ignoriert", feedback: "💡 <b>Analyse:</b> Gut ignoriert, da wissenschaftlich unbelegt." }
                 ]
             },
             {
@@ -612,8 +625,8 @@
                     { author: "Frank", text: "Statistiken kann man sich auch schönreden." }
                 ],
                 options: [
-                    { text: "📤 Teilen", bias: "neutral", label: "Wahre Statistik geteilt", feedback: "💡 <b>Analyse:</b> Fundierte und korrekte Wirtschaftsdaten." },
-                    { text: "👁️ Ignorieren", bias: "neutral", label: "Statistik ignoriert", feedback: "💡 <b>Analyse:</b> Neutral geblieben." }
+                    { text: "📤 Teilen", bias: "neutral", isError: false, label: "Wahre Statistik geteilt", feedback: "💡 <b>Analyse:</b> Fundierte und korrekte Wirtschaftsdaten." },
+                    { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Statistik ignoriert", feedback: "💡 <b>Analyse:</b> Neutral geblieben." }
                 ]
             },
             {
@@ -627,8 +640,8 @@
                     { author: "Michael", text: "Korrupter Saftladen!" }
                 ],
                 options: [
-                    { text: "📤 Teilen", bias: "propaganda", label: "Auf selektive Statistik reingefallen", feedback: "💡 <b>Analyse:</b> Profi-Propaganda-Trick (Cherry Picking)! Echte Zahlen werden aus dem Kontext gerissen, um künstliche Wut zu erzeugen." },
-                    { text: "👁️ Ignorieren", bias: "neutral", label: "Manipulativen Post ignoriert", feedback: "💡 <b>Analyse:</b> Gut gemacht, dich nicht von der polemischen Zuspitzung triggern zu lassen." }
+                    { text: "📤 Teilen", bias: "propaganda", isError: true, label: "Auf selektive Statistik reingefallen", feedback: "💡 <b>Analyse:</b> Profi-Propaganda-Trick (Cherry Picking)! Echte Zahlen werden aus dem Kontext gerissen." },
+                    { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Manipulativen Post ignoriert", feedback: "💡 <b>Analyse:</b> Gut gemacht, dich nicht von der polemischen Zuspitzung triggern zu lassen." }
                 ]
             },
             {
@@ -642,38 +655,38 @@
                     { author: "Chris", text: "Weiter so!" }
                 ],
                 options: [
-                    { text: "📤 Teilen", bias: "neutral", label: "Fortschritt geteilt", feedback: "💡 <b>Analyse:</b> Die Studie ist zwar echt, aber etwas schöngeredet. Das Teilen ist dennoch vertretbar." },
-                    { text: "👁️ Ignorieren", bias: "neutral", label: "Klima-Post ignoriert", feedback: "💡 <b>Analyse:</b> Neutral geblieben." }
+                    { text: "📤 Teilen", bias: "neutral", isError: false, label: "Fortschritt geteilt", feedback: "💡 <b>Analyse:</b> Die Studie ist zwar echt, aber etwas schöngeredet. Das Teilen ist dennoch vertretbar." },
+                    { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Klima-Post ignoriert", feedback: "💡 <b>Analyse:</b> Neutral geblieben." }
                 ]
             },
             {
                 id: 7, type: "feed", difficulty: "Sehr schwer (Experten-Level)",
                 author: "Global-Tech-Insights", avatar: "💡", tag: "#Technologie",
                 content: "Wissenschaftliche Auswertung zeigt: Künstliche Intelligenz verbraucht in Rechenzentren mittlerweile mehr Strom als ganze Kleinländern zusammen. Sofortiges Stoppen gefordert!",
-                accountProfile: "<b>Profil-Check:</b> 'Global-Tech-Insights' • Scheinbar neutrales Tech-Institut • Finanziert von einer konkurrierenden Industrielobby, die eigene Server-Modelle betreibt.",
+                accountProfile: "<b>Profil-Check:</b> 'Global-Tech-Insights' • Scheinbar neutrales Tech-Institut • Finanziert von einer konkurrierenden Industrielobby.",
                 comments: [
                     { author: "Paul", text: "Vollkommen Wahnsinn, das treibt uns in die Klimakatastrophe!" },
                     { author: "Tina", text: "Wartet mal, der Stromverbrauch pro Rechenleistung ist laut anderen Studien pro Jahr gesunken..." },
                     { author: "Jonas", text: "Abschalten, sofort!" }
                 ],
                 options: [
-                    { text: "📤 Teilen", bias: "propaganda", label: "Gezielte Lobby-Propaganda gestreut", feedback: "💡 <b>Analyse:</b> Extrem schwerer Trick! Die Kernzahl stimmt grob, aber sie wird von einer Konkurrenzlobby instrumentalisiert, um Panik zu schüren und Gesetze zu beeinflussen." },
-                    { text: "👁️ Ignorieren", bias: "neutral", label: "Lobby-Framing umschifft", feedback: "💡 <b>Analyse:</b> Sehr stark! Du hast dich von der vermeintlichen Seriosität nicht blenden lassen." }
+                    { text: "📤 Teilen", bias: "propaganda", isError: true, label: "Gezielte Lobby-Propaganda gestreut", feedback: "💡 <b>Analyse:</b> Extrem schwerer Trick! Die Kernzahl stimmt grob, aber sie wird von einer Konkurrenzlobby instrumentalisiert." },
+                    { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Lobby-Framing umschifft", feedback: "💡 <b>Analyse:</b> Sehr stark! Du hast dich von der vermeintlichen Seriosität nicht blenden lassen." }
                 ]
             },
             {
                 id: 8, type: "feed", difficulty: "Sehr schwer (Experten-Level)",
                 author: "Stimmungs-Barometer", avatar: "📊", tag: "#Gesellschaft",
                 content: "Repräsentative Umfrage: 84% aller Bürger fordern eine sofortige Neuausrichtung der Bildungspolitik!",
-                accountProfile: "<b>Profil-Check:</b> 'Stimmungs-Barometer' • Institut ohne offene Methodik • Online-Umfrage mit geschlossener Klick-Gruppe von nur 300 Personen.",
+                accountProfile: "<b>Profil-Check:</b> 'Stimmungs-Barometer' • Institut ohne offene Methodik • Online-Umfrage mit nur 300 Personen.",
                 comments: [
                     { author: "Sarah", text: "Endlich wacht die Mehrheit auf!" },
                     { author: "Markus", text: "Wer wurde da befragt? 300 Leute auf Twitter? Nicht repräsentativ." },
                     { author: "Karin", text: "Stimmt absolut, alles läuft schief." }
                 ],
                 options: [
-                    { text: "📤 Teilen", bias: "propaganda", label: "Auf Schein-Repräsentativität reingefallen", feedback: "💡 <b>Analyse:</b> Klassischer Trick: Das Wort 'repräsentativ' wird genutzt, obwohl die Umfrage völlig unseriös aufgesetzt wurde, um Druck auszuüben." },
-                    { text: "👁️ Ignorieren", bias: "neutral", label: "Schein-Umfrage ignoriert", feedback: "💡 <b>Analyse:</b> Ausgezeichnet erkannt, dass hier mit gefälschter Autorität gearbeitet wird." }
+                    { text: "📤 Teilen", bias: "propaganda", isError: true, label: "Auf Schein-Repräsentativität reingefallen", feedback: "💡 <b>Analyse:</b> Klassischer Trick: Das Wort 'repräsentativ' wird genutzt, obwohl die Umfrage völlig unseriös ist." },
+                    { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Schein-Umfrage ignoriert", feedback: "💡 <b>Analyse:</b> Ausgezeichnet erkannt, dass hier mit gefälschter Autorität gearbeitet wird." }
                 ]
             },
             {
@@ -687,8 +700,8 @@
                     { author: "Max", text: "Geschichte war nie meine Stärke, aber cool." }
                 ],
                 options: [
-                    { text: "📤 Teilen", bias: "neutral", label: "Historisches Faktum geteilt", feedback: "💡 <b>Analyse:</b> Korrektes historisches Datum." },
-                    { text: "👁️ Ignorieren", bias: "neutral", label: "Ignoriert", feedback: "💡 <b>Analyse:</b> Neutral." }
+                    { text: "📤 Teilen", bias: "neutral", isError: false, label: "Historisches Faktum geteilt", feedback: "💡 <b>Analyse:</b> Korrektes historisches Datum." },
+                    { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Ignoriert", feedback: "💡 <b>Analyse:</b> Neutral." }
                 ]
             },
             {
@@ -702,79 +715,77 @@
                     { author: "Mona", text: "Ein Traum von Hund." }
                 ],
                 options: [
-                    { text: "📤 Teilen", bias: "neutral", label: "Hilfreicher Aufruf geteilt", feedback: "💡 <b>Analyse:</b> Sinnvoller sozialer Aufruf ohne böse Absichten." },
-                    { text: "👁️ Ignorieren", bias: "neutral", label: "Tierheim-Post ignoriert", feedback: "💡 <b>Analyse:</b> Kein Problem." }
+                    { text: "📤 Teilen", bias: "neutral", isError: false, label: "Hilfreicher Aufruf geteilt", feedback: "💡 <b>Analyse:</b> Sinnvoller sozialer Aufruf ohne böse Absichten." },
+                    { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Tierheim-Post ignoriert", feedback: "💡 <b>Analyse:</b> Kein Problem." }
                 ]
             }
         ];
 
-        // 5 ZUFÄLLIGE FIGUREN FÜR DEN CHAT
+        // DIE 5 CHARAKTERE MIT IHREM SPEZIFISCHEN PROFIL
         const chatPool = [
             {
                 sender: "Mama 👩‍👧",
                 messages: [
-                    { sender: "Mama 👩‍👧", text: "Schatz, hast du das im Netz gesehen? Angeblich wird Wasser in unserer Stadt ab morgen rationiert! 😱", type: "received" },
-                    { sender: "Mama 👩‍👧", text: "Soll ich direkt im Supermarkt Vorräte kaufen?", type: "received" }
+                    { sender: "Mama 👩‍👧", text: "Schatz, schau mal diesen Post an: Angeblich werden ab nächster Woche alle Supermärkte sonntags komplett geschlossen wegen einer Notverordnung! 😱", type: "received" },
+                    { sender: "Mama 👩‍👧", text: "Meinst du, wir sollten das in der Nachbarschafts-Gruppe teilen, damit sich alle vorbereiten?", type: "received" }
                 ],
                 options: [
-                    { text: "📤 Nachricht in Familien-Gruppe teilen", bias: "propaganda", label: "Panik im Chat verbreitet", feedback: "💡 <b>Konsequenz:</b> Du hast die unbegründete Angst deiner Mutter verstärkt und Hamsterkäufe ausgelöst." },
-                    { text: "🔍 Nachprüfen und Mama Entwarnung geben", bias: "neutral", label: "Kettenbrief gestoppt", feedback: "💡 <b>Konsequenz:</b> Perfekt! Du hast nachgesehen, dass es eine alte Falschmeldung von vor 3 Jahren ist." },
-                    { text: "👁️ Ignorieren", bias: "neutral", label: "Chat ignoriert", feedback: "💡 <b>Konsequenz:</b> Mama bleibt in ihrer Sorge allein." }
+                    { text: "📤 Mamas Vorschlag annehmen & Falschmeldung teilen", bias: "propaganda", isError: true, label: "Auf Mamas Fehlinfo reingefallen", feedback: "💡 <b>Konsequenz:</b> Du hast Mamas ungesicherte Panikmache weiterverbreitet." },
+                    { text: "🔍 Mama erklären, dass das ein Kettenbrief-Fake ist", bias: "neutral", isError: false, label: "Mama vor Fake bewahrt", feedback: "💡 <b>Konsequenz:</b> Klasse! Du hast Mama aufgeklärt und den Fake gestoppt." },
+                    { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Mamas Nachricht ignoriert", feedback: "💡 <b>Konsequenz:</b> Unkommentiert gelassen." }
                 ]
             },
             {
-                sender: "Freund Ben 📱",
+                sender: "Opa 👴",
                 messages: [
-                    { sender: "Freund Ben 📱", text: "Ey, hast du das Video gesehen, wo behauptet wird, dass Wahlen komplett manipuliert sind?", type: "received" },
-                    { sender: "Freund Ben 📱", text: "Der Typ in dem Video hat echt überzeugende Diagramme gezeigt!", type: "received" }
+                    { sender: "Opa 👴", text: "Hallo! Mir wurde das hier zugeschickt: Die da oben planen angeblich, unseren Strom zu drosseln, um uns zu überwachen! 📉", type: "received" },
+                    { sender: "Opa 👴", text: "Das muss man einfach teilen, damit die Wahrheit ans Licht kommt!", type: "received" }
                 ],
                 options: [
-                    { text: "📤 Dem Video zustimmen & weiterleiten", bias: "conspiracy", label: "Demokratie-Skepsis gestreut", feedback: "💡 <b>Konsequenz:</b> Du hast ungeprüft Misstrauen in demokratische Prozesse geschürt." },
-                    { text: "🔍 Ben erklären, warum die Diagramme Fake sind", bias: "neutral", label: "Kompetent aufgeklärt", feedback: "💡 <b>Konsequenz:</b> Stark! Du hast im direkten Gespräch sachlichen Gegenwind geleistet." },
-                    { text: "👁️ Thema wechseln", bias: "neutral", label: "Ausgewichen", feedback: "💡 <b>Konsequenz:</b> Dem Konflikt aus dem Weg gegangen." }
+                    { text: "📤 Opas Propaganda-Behauptung teilen", bias: "conspiracy", isError: true, label: "Opas Verschwörung geteilt", feedback: "💡 <b>Konsequenz:</b> Du hast Opas Propaganda-Erzählung unkritisch übernommen." },
+                    { text: "👁️ Opas Nachricht ignorieren", bias: "neutral", isError: false, label: "Opas Post ignoriert", feedback: "💡 <b>Konsequenz:</b> Richtig entschieden – du hast den Propaganda-Post ignoriert, ohne ihn zu streuen." }
                 ]
             },
             {
-                sender: "Mitschülerin Lea 🎒",
+                sender: "Dad 👨‍👧",
                 messages: [
-                    { sender: "Mitschülerin Lea 🎒", text: "Sag mal, stimmt es, dass unsere Schule nächstes Jahr komplett auf Online-Unterricht umstellt wegen Energiemangel?", type: "received" },
-                    { sender: "Mitschülerin Lea 🎒", text: "Steht auf so einem neuen Info-Kanal auf Insta.", type: "received" }
+                    { sender: "Dad 👨‍👧", text: "Hey! Hast du den Artikel über die neue Steuerreform gesehen? Sieht so aus, als ob das meiste davon stimmt und fair berechnet ist.", type: "received" },
+                    { sender: "Dad 👨‍👧", text: "Kann man so unterschreiben, oder?", type: "received" }
                 ],
                 options: [
-                    { text: "📤 Story dazu posten ('Krass, wieder Lockdown!')", bias: "propaganda", label: "Gerücht verbreitet", feedback: "💡 <b>Konsequenz:</b> Du hast ein unbestätigtes Schülergerücht in die Welt gesetzt." },
-                    { text: "🔍 Sekretariat-Info prüfen / Lea beruhigen", bias: "neutral", label: "Gerücht entkräftet", feedback: "💡 <b>Konsequenz:</b> Souverän den Fake als Schüler-Gerede entlarvt." },
-                    { text: "👁️ Nicht antworten", bias: "neutral", label: "Ignoriert", feedback: "💡 <b>Konsequenz:</b> Gerücht bliebt unkommentiert." }
+                    { text: "📤 Dads Einschätzung teilen", bias: "neutral", isError: false, label: "Dads fundierte Ansicht geteilt", feedback: "💡 <b>Konsequenz:</b> Dad lag hier glücklicherweise richtig und seriös." },
+                    { text: "🔍 Nachprüfen (Dad hat sich hier leider täuschen lassen)", bias: "neutral", isError: false, label: "Dads Irrtum korrigiert", feedback: "💡 <b>Konsequenz:</b> Stark! Selbst bei Dad hast du genauer hingesehen und einen kleinen Denkfehler korrigiert." },
+                    { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Ignoriert", feedback: "💡 <b>Konsequenz:</b> Neutral geblieben." }
                 ]
             },
             {
-                sender: "Onkel Jürgen 🚙",
+                sender: "Schwester 👧",
                 messages: [
-                    { sender: "Onkel Jürgen 🚙", text: "Hallo! Schau dir mal das Video an, das ich dir geschickt habe. Da wird bewiesen, dass die Spritpreise absichtlich erfunden sind!", type: "received" },
-                    { sender: "Onkel Jürgen 🚙", text: "Müssen wir uns alle wehren!!" },
-                    { sender: "Onkel Jürgen 🚙", text: "Teil das unbedingt weiter!", type: "received" }
+                    { sender: "Schwester 👧", text: "Hey! Wollte nur kurz sagen: Glaub nicht jeden Quatsch, der heute wieder auf Social Media kursiert. Total viele Fake-News unterwegs! 🛑", type: "received" },
+                    { sender: "Schwester 👧", text: "Bleib schön kritisch!", type: "received" }
                 ],
                 options: [
-                    { text: "📤 Auf Onkels Wunsch hin teilen", bias: "propaganda", label: "Ketten-Propaganda bedient", feedback: "💡 <b>Konsequenz:</b> Du hast Onkels Verschwörungstheorie im Familienkreis salonfähig gemacht." },
-                    { text: "🔍 Sachlich Fakten zu Rohölmärkten erklären", bias: "neutral", label: "Wütenden Onkel beruhigt", feedback: "💡 <b>Konsequenz:</b> Respekt, dass du sachlich geblieben bist!" },
-                    { text: "👁️ Kurz mit 'Haha ok' abwimmeln", bias: "neutral", label: "Abgewimmelt", feedback: "💡 <b>Konsequenz:</b> Diskussion geschickt vermieden." }
+                    { text: "📤 Antworten: 'Stimmt voll, pass auch auf dich auf!'", bias: "neutral", isError: false, label: "Medienkompetenz gestäkt", feedback: "💡 <b>Konsequenz:</b> Vorbildlich! Ihr beide passt im Netz aufeinander auf." },
+                    { text: "👁️ Mit Daumen-hoch-Emoji reagieren", bias: "neutral", isError: false, label: "Warnung zur Kenntnis genommen", feedback: "💡 <b>Konsequenz:</b> Die Warnung angenommen." }
                 ]
             },
             {
-                sender: "Influencer-Bot 🤖",
+                sender: "Bester Freund 🧑",
                 messages: [
-                    { sender: "Influencer-Bot 🤖", text: "Hey! Du wurdest ausgewählt für ein exklusives Krypto-Gewinnspiel! 💰", type: "received" },
-                    { sender: "Influencer-Bot 🤖", text: "Klicke jetzt auf den Link und verdopple dein Taschengeld in 10 Minuten!!", type: "received" }
+                    { sender: "Bester Freund 🧑", text: "Ey, hast du schon gesehen, wo wir uns morgen nach der Schule treffen? Kumpel meint Park, aber da ist es voll.", type: "received" },
+                    { sender: "Bester Freund 🧑", text: "Lass lieber zu Dir gehen, oder?", type: "received" }
                 ],
                 options: [
-                    { text: "📤 Link teilen und mitmachen", bias: "propaganda", label: "Auf Betrug reingefallen", feedback: "💡 <b>Konsequenz:</b> Das war eine klassische Scam-Falle zum Datendiebstahl!" },
-                    { text: "👁️ Sofort blockieren & melden", bias: "neutral", label: "Scam abgewehrt", feedback: "💡 <b>Konsequenz:</b> Sehr gut! Betrügerischen Bot direkt aus dem Verkehr gezogen." }
+                    { text: "📤 Antworten: 'Jo, komm rum!'", bias: "neutral", isError: false, label: "Alltags-Absprache getroffen", feedback: "💡 <b>Konsequenz:</b> Völlig harmloser Chat ohne Propaganda-Falle." },
+                    { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Kurz nicht reagiert", feedback: "💡 <b>Konsequenz:</b> Keine Auswirkung." }
                 ]
             }
         ];
 
         // SPIEL-ZUSTAND
-        let activeSequence = []; // Enthält gemischt die 10 Feeds und zufällige Chats
+        let activeSequence = [];
         let currentStep = 0;
+        let errorCount = 0; // Zähler für Fehler/Propaganda-Fallen
         let userName = "Alex";
         let userChoices = [];
 
@@ -812,17 +823,24 @@
             headerStats.style.display = "flex";
             
             currentStep = 0;
+            errorCount = 0;
             userChoices = [];
             
-            // Generiere eine abwechslungsreiche Sequenz: Alle 10 Feeds + 5 zufällig eingestreute Chats
             buildRandomSequence();
-            
             renderStep();
         }
 
         function buildRandomSequence() {
             activeSequence = [];
-            let chatQueue = [...chatPool].sort(() => Math.random() - 0.5); // Mischen
+            let chatQueue = [...chatPool].sort(() => Math.random() - 0.5);
             
-            // Wir verteilen die 10 Feeds und streuen zwischendurch 5 Chats ein
-   
+            feedItems.forEach((item, index) => {
+                activeSequence.push(item);
+                if ([1, 3, 5, 7, 9].includes(index) && chatQueue.length > 0) {
+                    activeSequence.push(chatQueue.pop());
+                }
+            });
+        }
+
+        function renderStep() {
+            if (currentStep >= activeSequ
