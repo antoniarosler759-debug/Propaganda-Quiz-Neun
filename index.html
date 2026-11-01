@@ -765,7 +765,7 @@
                     { sender: "Schwester 👧", text: "Bleib schön kritisch!", type: "received" }
                 ],
                 options: [
-                    { text: "📤 Antworten: 'Stimmt voll, pass auch auf dich auf!'", bias: "neutral", isError: false, label: "Medienkompetenz gestäkt", feedback: "💡 <b>Konsequenz:</b> Vorbildlich! Ihr beide passt im Netz aufeinander auf." },
+                    { text: "📤 Antworten: 'Stimmt voll, pass auch auf dich auf!'", bias: "neutral", isError: false, label: "Medienkompetenz gestärkt", feedback: "💡 <b>Konsequenz:</b> Vorbildlich! Ihr beide passt im Netz aufeinander auf." },
                     { text: "👁️ Mit Daumen-hoch-Emoji reagieren", bias: "neutral", isError: false, label: "Warnung zur Kenntnis genommen", feedback: "💡 <b>Konsequenz:</b> Die Warnung angenommen." }
                 ]
             },
@@ -781,11 +781,10 @@
                 ]
             }
         ];
-
-        // SPIEL-ZUSTAND
+                    // SPIEL-ZUSTAND
         let activeSequence = [];
         let currentStep = 0;
-        let errorCount = 0; // Zähler für Fehler/Propaganda-Fallen
+        let errorCount = 0;
         let userName = "Alex";
         let userChoices = [];
 
@@ -843,4 +842,220 @@
         }
 
         function renderStep() {
-            if (currentStep >= activeSequ
+            if (currentStep >= activeSequence.length) {
+                showResults();
+                return;
+            }
+
+            const progressPercent = (currentStep / activeSequence.length) * 100;
+            progressFill.style.width = progressPercent + "%";
+            statStep.innerText = `${currentStep + 1}/${activeSequence.length}`;
+
+            const data = activeSequence[currentStep];
+
+            if (data.type === "feed" || !data.type) {
+                screenChat.classList.remove("active");
+                screenFeed.classList.add("active");
+
+                document.getElementById("post-avatar").innerText = data.avatar;
+                document.getElementById("post-author").innerText = data.author;
+                document.getElementById("post-tag").innerText = `${data.tag} • Schwierigkeit: ${data.difficulty}`;
+                document.getElementById("post-content").innerText = data.content;
+                document.getElementById("extra-inspection-area").innerHTML = "";
+
+                renderMainOptions(data);
+
+            } else if (data.type === "chat") {
+                screenFeed.classList.remove("active");
+                screenChat.classList.add("active");
+
+                document.getElementById("chat-sender-name").innerText = data.sender;
+                const chatBox = document.getElementById("chat-box");
+                chatBox.innerHTML = "";
+
+                data.messages.forEach(msg => {
+                    const msgDiv = document.createElement("div");
+                    msgDiv.className = `chat-msg ${msg.type}`;
+                    msgDiv.innerHTML = `<div class="chat-msg-author">${msg.sender}</div>${msg.text}`;
+                    chatBox.appendChild(msgDiv);
+                });
+
+                const chatOptionsContainer = document.getElementById("chat-options-container");
+                chatOptionsContainer.innerHTML = "";
+
+                data.options.forEach((opt) => {
+                    const btn = document.createElement("button");
+                    btn.className = "option-btn";
+                    btn.innerText = opt.text;
+                    btn.addEventListener("click", () => handleChoice(opt));
+                    chatOptionsContainer.appendChild(btn);
+                });
+            }
+        }
+
+        function renderMainOptions(data) {
+            const optionsContainer = document.getElementById("options-container");
+            optionsContainer.innerHTML = "";
+
+            const btnShare = document.createElement("button");
+            btnShare.className = "option-btn";
+            btnShare.innerText = "📤 Teilen";
+            btnShare.addEventListener("click", () => handleChoice(data.options[0]));
+            optionsContainer.appendChild(btnShare);
+
+            const btnCheck = document.createElement("button");
+            btnCheck.className = "option-btn";
+            btnCheck.innerText = "🔍 Überprüfen (Account & Kommentare ansehen)";
+            btnCheck.addEventListener("click", () => showInspectionView(data));
+            optionsContainer.appendChild(btnCheck);
+
+            const btnIgnore = document.createElement("button");
+            btnIgnore.className = "option-btn";
+            btnIgnore.innerText = "👁️ Ignorieren";
+            btnIgnore.addEventListener("click", () => handleChoice(data.options[1]));
+            optionsContainer.appendChild(btnIgnore);
+        }
+
+        function showInspectionView(data) {
+            const extraArea = document.getElementById("extra-inspection-area");
+            
+            if (errorCount >= 3) {
+                extraArea.innerHTML = `
+                    <div class="blocked-warning">
+                        ❌ Ach Nee, das passt schon...<br>
+                        <span style="font-size:0.8rem; font-weight:normal; color:#cbd5e1;">
+                            (Du bist bereits zu tief in der Filterblase gefangen. Der Algorithmus verwehrt dir den neutralen Blick auf die Quellen!)
+                        </span>
+                    </div>
+                `;
+                return;
+            }
+
+            let commentsHTML = "";
+            data.comments.forEach(c => {
+                commentsHTML += `
+                    <div class="comment-item">
+                        <div class="comment-author">${c.author}</div>
+                        <div>${c.text}</div>
+                    </div>
+                `;
+            });
+
+            extraArea.innerHTML = `
+                <div class="account-profile-box">
+                    ${data.accountProfile}
+                </div>
+                <div class="comments-section">
+                    <div class="comments-title">💬 Erste Kommentare unter dem Beitrag (scrollbar):</div>
+                    ${commentsHTML}
+                </div>
+            `;
+
+            const optionsContainer = document.getElementById("options-container");
+            optionsContainer.innerHTML = "";
+
+            const btnShare = document.createElement("button");
+            btnShare.className = "option-btn";
+            btnShare.innerText = "📤 Doch Teilen";
+            btnShare.addEventListener("click", () => handleChoice(data.options[0]));
+            optionsContainer.appendChild(btnShare);
+
+            const btnIgnore = document.createElement("button");
+            btnIgnore.className = "option-btn";
+            btnIgnore.innerText = "👁️ Doch Ignorieren";
+            btnIgnore.addEventListener("click", () => handleChoice(data.options[1]));
+            optionsContainer.appendChild(btnIgnore);
+
+            const btnBack = document.createElement("button");
+            btnBack.className = "option-btn btn-secondary";
+            btnBack.innerText = "⬅️ Zurück zur Ansicht";
+            btnBack.addEventListener("click", () => {
+                extraArea.innerHTML = "";
+                renderMainOptions(data);
+            });
+            optionsContainer.appendChild(btnBack);
+        }
+
+        function handleChoice(option) {
+            if (option.isError) {
+                errorCount++;
+            }
+
+            userChoices.push({
+                step: currentStep,
+                bias: option.bias,
+                label: option.label,
+                text: option.text,
+                feedback: option.feedback
+            });
+
+            modalTitle.innerHTML = `🔍 Analyse für ${userName}`;
+            modalBody.innerHTML = option.feedback;
+            modalFeedback.classList.add("active");
+        }
+
+        function advanceStep() {
+            modalFeedback.classList.remove("active");
+            currentStep++;
+            renderStep();
+        }
+
+        function showResults() {
+            progressFill.style.width = "100%";
+            screenFeed.classList.remove("active");
+            screenChat.classList.remove("active");
+            screenResults.classList.add("active");
+
+            let propagandaCount = 0;
+            let neutralCount = 0;
+            let conspiracyCount = 0;
+
+            userChoices.forEach(c => {
+                if (c.bias === "propaganda") propagandaCount++;
+                if (c.bias === "neutral") neutralCount++;
+                if (c.bias === "conspiracy") conspiracyCount++;
+            });
+
+            const summaryElem = document.getElementById("result-summary");
+            let summaryText = `<b>Hallo ${userName}!</b> `;
+
+            if (errorCount === 0) {
+                summaryText += "🛡️ <b>Ergebnis: Propaganda-Experte!</b> Du hast alle brenzligen Situationen durchschaut und dich nicht von der Filterblase einschränken lassen.";
+            } else if (errorCount < 3) {
+                summaryText += "⚖️ <b>Ergebnis: Gut geschult!</b> Du hast ein paar Fehler gemacht, konntest dich aber noch aus dem Algorithmus befreien.";
+            } else {
+                summaryText += "⚡ <b>Ergebnis: Gefangen in der Echokammer!</b> Du hast 3 oder mehr Fehler gemacht. Der Algorithmus hat dir den Zugang zur Faktenprüfung verwehrt, wodurch du kaum noch eine Chance hattest zu entkommen.";
+            }
+
+            summaryElem.innerHTML = summaryText;
+
+            const resultsList = document.getElementById("results-list");
+            resultsList.innerHTML = "";
+
+            userChoices.forEach((choice, index) => {
+                const item = document.createElement("div");
+                item.className = "result-item";
+
+                let badgeClass = "badge-neutral";
+                if (choice.bias === "propaganda") badgeClass = "badge-propaganda";
+                if (choice.bias === "conspiracy") badgeClass = "badge-conspiracy";
+
+                item.innerHTML = `
+                    <div class="result-title">Station ${index + 1}: ${choice.label}</div>
+                    <div class="result-desc">Deine Wahl: "${choice.text}"</div>
+                    <span class="badge ${badgeClass}">${choice.bias.toUpperCase()}</span>
+                `;
+                resultsList.appendChild(item);
+            });
+        }
+
+        function restartSimulation() {
+            screenResults.classList.remove("active");
+            headerStats.style.display = "none";
+            screenWelcome.classList.add("active");
+            progressFill.style.width = "0%";
+            errorCount = 0;
+        }
+    </script>
+</body>
+</html>
