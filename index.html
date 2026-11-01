@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propaganda & Algorithmus Sim</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #3b82f6;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #22c55e;
+            --border: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .screen {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        h1, h2, h3 {
+            margin-top: 0;
+            color: var(--text-color);
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background-color: #0f172a;
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            font-size: 14px;
+            color: var(--text-muted);
+            background: var(--card-bg);
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .post-header {
+            margin-bottom: 12px;
+        }
+
+        .author-name {
+            font-weight: bold;
+            color: var(--primary);
+            background: rgba(59, 130, 246, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .post-body {
+            font-size: 18px;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .post-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .action-buttons-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary { background-color: var(--primary); color: white; width: 100%; }
+        .btn-secondary { background-color: #475569; color: white; width: 100%; }
+        .btn-danger { background-color: var(--danger); color: white; }
+        .btn-neutral { background-color: #64748b; color: white; }
+        .btn-warning { background-color: var(--warning); color: #0f172a; }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 100;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 450px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .comments-list {
+            background: #0f172a;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .comments-list p {
+            margin: 8px 0;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 6px;
+        }
+
+        .comments-list p:last-child {
+            border-bottom: none;
+        }
+
+        .chat-card {
+            border: 2px solid var(--primary);
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        .chat-header .avatar {
+            font-size: 28px;
+            background: var(--border);
+            padding: 6px;
+            border-radius: 50%;
+        }
+
+        .chat-body {
+            background: #0f172a;
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 16px;
+        }
+
+        .chat-options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        #end-screen {
+            text-align: center;
+        }
+
+        .emoji-banner {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .end-description {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+  <body>
+
+    <!-- STUFE 0: Startbildschirm / Namenseingabe -->
+    <div id="start-screen" class="screen card active">
+        <h1>Propaganda-Simulator</h1>
+        <p>Willkommen zur Simulation für Wirtschaftspolitik. Erkenne die Propaganda, durchschaue Fakes und passe auf, wem du vertraust!</p>
+        <div class="input-group">
+            <label for="username">Gib deinen Namen ein:</label>
+            <input type="text" id="username" placeholder="Dein Name..." autocomplete="off">
+        </div>
+        <button id="start-btn" class="btn btn-primary" onclick="startGame()">Spiel Starten</button>
+    </div>
+
+    <!-- MAIN APP SCREEN (Sichtbar wenn Spiel läuft) -->
+    <div id="game-screen" class="screen hidden">
+        
+        <!-- Topbar / Header -->
+        <header class="app-header">
+            <div class="user-badge">User: <span id="display-name">Spieler</span></div>
+            <div class="progress-badge">Fortschritt: <span id="event-count">0</span> / 12</div>
+        </header>
+
+        <!-- STUFE 1: Der Social Media Feed -->
+        <main id="feed-container" class="card">
+            <div class="post-header">
+                <span id="post-author" class="author-name">@User</span>
+            </div>
+            <div id="post-content" class="post-body">
+                Behauptung lädt...
+            </div>
+            <div class="post-actions">
+                <button class="btn btn-secondary" onclick="openProfileCheck()">🔍 Profil & Kommentare prüfen</button>
+                <div class="action-buttons-row">
+                    <button class="btn btn-danger" onclick="makeFeedChoice('report')">🚨 Melden / Entlarven</button>
+                    <button class="btn btn-neutral" onclick="makeFeedChoice('ignore')">➡️ Ignorieren</button>
+                    <button class="btn btn-warning" onclick="makeFeedChoice('share')">📢 Glauben & Teilen</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- STUFE 2: Overlay für Profil & Kommentare Prüfen -->
+        <div id="profile-modal" class="modal hidden">
+            <div class="modal-content card">
+                <h3>Account-Analyse</h3>
+                <div class="profile-info">
+                    <p><strong>Handle:</strong> <span id="modal-handle">@name</span></p>
+                    <p><strong>Bisherige Posts:</strong></p>
+                    <ul id="modal-history"></ul>
+                </div>
+                <hr>
+                <h4>Top-Kommentare:</h4>
+                <div id="modal-comments" class="comments-list"></div>
+                <button class="btn btn-secondary close-btn" onclick="closeProfileCheck()">Zurück zum Feed</button>
+            </div>
+        </div>
+
+        <!-- STUFE 3: WhatsApp Chat Popup (Familie/Freunde) -->
+        <div id="chat-modal" class="modal hidden">
+            <div class="modal-content chat-card">
+                <div class="chat-header">
+                    <span id="chat-sender-avatar" class="avatar">👤</span>
+                    <div>
+                        <h4 id="chat-sender-name">Name</h4>
+                        <small>Schreibt dir gerade...</small>
+                    </div>
+                </div>
+                <div class="chat-body">
+                    <p id="chat-message-text">Nachricht...</p>
+                </div>
+                <div id="chat-options" class="chat-options-container">
+                    <!-- Antwort-Buttons werden dynamisch eingefügt -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- STUFE 4: Endauswertung (Die 5 Enden) -->
+    <div id="end-screen" class="screen card hidden">
+        <div id="end-emoji" class="emoji-banner">🎉</div>
+        <h2 id="end-title">Ergebnis</h2>
+        <p id="end-text" class="end-description"></p>
+        <p class="error-stats">Fehleranzahl: <strong id="final-errors">0</strong></p>
+        <button class="btn btn-primary" onclick="location.reload()">Nochmal spielen</button>
+    </div>
+        <script>
+        let playerName = "";
+        let errorCount = 0;
+        let currentStep = 0;
+        let totalSteps = 10;
+        let gameQueue = [];
+        let activeItem = null;
+
+        const feedPool = [
+            {
+                id: "post1",
+                author: "@Freiheit_Jetzt_1984_",
+                text: "EILMELDUNG: Die Regierung verbietet ab nächsten Monat komplett den Barbezahlung-Verkehr! Wer noch Bargeld hat, macht sich strafbar!",
+                isFake: true,
+                handle: "@Freiheit_Jetzt_1984_",
+                history: ["EILMELDUNG: Regierung verbietet Barzahlung!", "EILMELDUNG: Regierung verbietet Barzahlung!", "EILMELDUNG: Regierung verbietet Barzahlung!"],
+                comments: [
+                    "Schrecklich!! Wir werden komplett gläsern!!1!",
+                    "Digga, das ist fake, schau mal ins Gesetzgebungsverfahren, da steht absolut gar nichts davon.",
+                    "Wacht auf Leute, bevor es zu spät ist!!"
+                ]
+            },
+            {
+                id: "post2",
+                author: "@Wirtschafts_Fokus_DE",
+                text: "Studie beweist: Jede Lohnerhöhung führt automatisch dazu, dass dein Supermarkt-Einkauf teurer wird. Schuld sind also nicht die Konzerne, sondern die Gewerkschaften!",
+                isFake: true,
+                handle: "@Wirtschafts_Fokus_DE",
+                history: ["Warum Mindestlohn den Wohlstand zerstört", "Interview mit Wirtschafts-Experten", "Jede Lohnerhöhung treibt die Preise hoch..."],
+                comments: [
+                    "Endlich sagt’s mal einer! Die Gewerkschaften rauben uns unser Erspartes.",
+                    "Ähm, nein? Das ist stark verkürzt. Die Inflation hat auch andere globale Ursachen.",
+                    "Komisch, dass die Chef-Gehälter im selben Zeitraum um 50% gestiegen sind..."
+                ]
+            },
+            {
+                id: "post3",
+                author: "@Wirtschafts_Watchdog",
+                text: "Trotz Rekordgewinnen der großen Energiekonzerne im letzten Quartal steigen die Strompreise für Privathaushalte im Januar um weitere 14%.",
+                isFake: false,
+                handle: "@Wirtschafts_Watchdog",
+                history: ["Quartalszahlen Energiekonzerne Q3", "Analyse zu Netzentgelten 2026", "Strompreise im europäischen Vergleich"],
+                comments: [
+                    "Das kann doch nicht wahr sein, wo bleibt die Politik?!",
+                    "Hier ist der Link zur offiziellen Börsenbilanz, das steht so im Quartalsbericht...",
+                    "Wenigstens blickt hier mal jemand durch."
+                ]
+            },
+            {
+                id: "post4",
+                author: "@Klartext_Jan98124",
+                text: "Geheimes Dokument enthüllt: Die Stadtkasse ist komplett leer, nächste Woche werden alle Schwimmbäder und Jugendzentren für immer geschlossen!",
+                isFake: true,
+                handle: "@Klartext_Jan98124",
+                history: ["SCHOCK in der Stadt!", "Jugendzentren vor dem Aus!!", "Geheimes Dokument enthüllt!"],
+                comments: [
+                    "Was?? Nein, da war ich letzten Freitag erst!",
+                    "Fake-Account, gugg dir mal das Profil an, das ist völlig neu.",
+                    "Stimmt, mein Onkel arbeitet bei der Stadt, da ist was dran!"
+                ]
+            }
+        ];
+
+        const familyPool = [
+            {
+                sender: "Mom",
+                avatar: "👩",
+                text: "Hey [NAME], schau mal das Video von @Klartext_Jan98124 an. Da wird gesagt, dass die Krise erfunden ist. Soll ich das in der Familiengruppe teilen? 😳",
+                options: [
+                    { text: "Bitte nicht! Das ist ein Fake-Account, schau dir die Kommentare an.", error: 0, action: "save" },
+                    { text: "Weiß nicht, sieht eigentlich ganz überzeugend aus... Probier's aus.", error: 1, action: "bad" },
+                    { text: "Ignorieren", error: 1, action: "ignore" }
+                ]
+            },
+            {
+                sender: "Opa",
+                avatar: "👴",
+                text: "Hallo [NAME], hier ist ein Link von einer echten Bürger-Initiative: Die da oben wollen uns komplett enteignen! Lies dir das mal durch.",
+                options: [
+                    { text: "Opa, bitte klick nicht auf solche dubiosen Werbeseiten.", error: 0, action: "save" },
+                    { text: "Interessant, schick mir mal mehr davon.", error: 2, action: "bad" },
+                    { text: "Nicht antworten", error: 1, action: "ignore" }
+                ]
+            },
+            {
+                sender: "Schwester",
+                avatar: "👧",
+                text: "Sag mal [NAME], hast du diesen Post über die angeblich geschlossenen Schwimmbäder gesehen? Ich hab grad auf der offiziellen Stadtseite geschaut, das ist kompletter Quatsch.",
+                options: [
+                    { text: "Gut, dass du nachgeschaut hast! Danke dir.", error: 0, action: "save" },
+                    { text: "Wer weiß, vielleicht stimmt es ja doch...", error: 1, action: "bad" },
+                    { text: "Kein Plan, interessiert mich nicht.", error: 1, action: "neutral" }
+                ]
+            },
+            {
+                sender: "Bester Freund",
+                avatar: "🧑",
+                text: "Ey [NAME], schau mal das Meme über die Supermarktpreise. Voll witzig, aber auch irgendwie krass oder? Soll ich das in Insta-Story packen?",
+                options: [
+                    { text: "Lass lieber, das verdreht total die Fakten.", error: 0, action: "save" },
+                    { text: "Ja Mann, mach auf jeden Fall!", error: 1, action: "bad" },
+                    { text: "Mach halt was du willst lol", error: 0, action: "neutral" }
+                ]
+            },
+            {
+                sender: "Dad",
+                avatar: "👨",
+                text: "[NAME], ich hab gelesen, dass die Fabrik hier wegen Umweltauflagen ins Ausland geht. 300 Jobs weg. Ziemlicher Mist für uns.",
+                options: [
+                    { text: "Dad, im Artikel fehlen wichtige Infos, die Fabrik läuft schon lange nicht mehr rentabel.", error: 0, action: "save" },
+                    { text: "Die Politik macht echt alles kaputt!", error: 1, action: "bad" },
+                    { text: "Oh man, echt blöd.", error: 0, action: "neutral" }
+                ]
+            }
+        ];
+                  function startGame() {
+            const nameInput = document.getElementById("username").value.trim();
+            if (nameInput === "") {
+                alert("Bitte gib deinen Namen ein!");
+                return;
+            }
+            playerName = nameInput;
+            document.getElementById("display-name").innerText = playerName;
+
+            document.getElementById("start-screen").classList.add("hidden");
+            document.getElementById("game-screen").classList.remove("hidden");
+
+            buildGameQueue();
+            loadNextStep();
+        }
+
+        function buildGameQueue() {
+            gameQueue = [];
+            for (let i = 0; i < 8; i++) {
+                let type = Math.random() < 0.6 ? "feed" : "family";
+                if (type === "feed") {
+                    let randomPost = feedPool[Math.floor(Math.random() * feedPool.length)];
+                    gameQueue.push({ type: "feed", data: randomPost });
+                } else {
+                    let randomFamily = familyPool[Math.floor(Math.random() * familyPool.length)];
+                    let clonedFamily = { ...randomFamily };
+                    clonedFamily.text = clonedFamily.text.replace("[NAME]", playerName);
+                    gameQueue.push({ type: "family", data: clonedFamily });
+                }
+            }
+            totalSteps = gameQueue.length;
+        }
+
+        function loadNextStep() {
+            if (currentStep >= totalSteps || gameQueue.length === 0) {
+                showEndScreen();
+                return;
+            }
+
+            document.getElementById("event-count").innerText = currentStep + 1;
+            activeItem = gameQueue.shift();
+
+            if (activeItem.type === "feed") {
+                document.getElementById("feed-container").classList.remove("hidden");
+                document.getElementById("chat-modal").classList.add("hidden");
+
+                document.getElementById("post-author").innerText = activeItem.data.author;
+                document.getElementById("post-content").innerText = activeItem.data.text;
+            } else {
+                document.getElementById("feed-container").classList.add("hidden");
+                showChatModal(activeItem.data);
+            }
+        }
+
+        function makeFeedChoice(choice) {
+            let post = activeItem.data;
+
+            if (choice === "report") {
+                if (!post.isFake) {
+                    errorCount += 0.5;
+                }
+            } else if (choice === "share") {
+                if (post.isFake) {
+                    errorCount += 1.5;
+                } else {
+                    errorCount += 0.5;
+                }
+            } else {
+                errorCount += 0.5;
+            }
+
+            currentStep++;
+            loadNextStep();
+        }
+
+        function openProfileCheck() {
+            if (!activeItem || activeItem.type !== "feed") return;
+            let post = activeItem.data;
+
+            document.getElementById("modal-handle").innerText = post.handle;
+            
+            let historyList = document.getElementById("modal-history");
+            historyList.innerHTML = "";
+            post.history.forEach(h => {
+                let li = document.createElement("li");
+                li.innerText = h;
+                historyList.appendChild(li);
+            });
+
+            let commentsDiv = document.getElementById("modal-comments");
+            commentsDiv.innerHTML = "";
+            post.comments.forEach(c => {
+                let p = document.createElement("p");
+                p.innerText = "💬 " + c;
+                commentsDiv.appendChild(p);
+            });
+
+            document.getElementById("profile-modal").classList.remove("hidden");
+        }
+
+        function closeProfileCheck() {
+            document.getElementById("profile-modal").classList.add("hidden");
+        }
+
+        function showChatModal(famData) {
+            document.getElementById("chat-sender-avatar").innerText = famData.avatar;
+            document.getElementById("chat-sender-name").innerText = famData.sender;
+            document.getElementById("chat-message-text").innerText = famData.text;
+
+            let optionsContainer = document.getElementById("chat-options");
+            optionsContainer.innerHTML = "";
+
+            famData.options.forEach((opt) => {
+                let btn = document.createElement("button");
+                btn.className = "btn btn-secondary";
+                btn.innerText = opt.text;
+                btn.onclick = () => handleChatChoice(opt.error);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById("chat-modal").classList.remove("hidden");
+        }
+
+        function handleChatChoice(errorAdd) {
+            errorCount += errorAdd;
+            document.getElementById("chat-modal").classList.add("hidden");
+            currentStep++;
+            loadNextStep();
+        }
+
+        function showEndScreen() {
+            document.getElementById("game-screen").classList.add("hidden");
+            document.getElementById("end-screen").classList.remove("hidden");
+            document.getElementById("final-errors").innerText = errorCount.toFixed(1);
+
+            let title = "";
+            let text = "";
+            let emoji = "🎉";
+
+            if (errorCount <= 0.5) {
+                title = "Der unerschütterliche Faktenchecker";
+                text = "Besser hätte man es nicht machen können. Du überlegst und prüfst erst alles, bevor du dem Gesagtem Glauben schenkst. Du bist sicher.";
+                emoji = "🎉";
+            } else if (errorCount <= 2) {
+                title = "Gut aufgeklärt";
+                text = "Gut gemacht! Du hast ein paar wenige Fehler gemacht, aber macht nichts. Frag einfach nochmal nach einer zweiten Meinung.";
+                emoji = "😊";
+            } else if (errorCount <= 4) {
+                title = "Gerade noch so die Kurve gekriegt";
+                text = "Gerade noch so die Kurve gekriegt. Das nächste Mal vielleicht einfach weiter scrollen?";
+                emoji = "🤔";
+            } else if (errorCount <= 6.5) {
+                title = "Gefährliches Halbwissen";
+                text = "Du bist im Netz nicht sicher. Bitte informiere dich, bevor du das nächste Mal etwas teilst.";
+                emoji = "😢";
+            } else {
+                title = "Voll in der Falle";
+                text = "Was machst du da? Hast du es überhaupt versucht? Bitte lösch deine Social Media Accounts.";
+                emoji = "😡";
+            }
+
+            document.getElementById("end-title").innerText = title;
+            document.getElementById("end-text").innerText = text;
+            document.getElementById("end-emoji").innerText = emoji;
+        }
+    </script>
+</body>
+</html>
