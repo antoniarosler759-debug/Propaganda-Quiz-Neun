@@ -269,7 +269,45 @@
             background-color: rgba(255, 255, 255, 0.08);
             border-color: var(--text-muted);
         }
-        
+                .chat-box {
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            height: 220px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .chat-msg {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .chat-msg.received {
+            background-color: #334155;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .chat-msg.sent {
+            background-color: var(--primary);
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-msg-author {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 4px;
+        }
+
         .comments-section {
             margin-top: 15px;
             border-top: 1px solid var(--border);
@@ -415,8 +453,8 @@
                 🤖 Algorithmus Sim
             </div>
             <div class="header-stats" id="header-stats" style="display: none;">
-                <div class="stat-item" title="Posts gespielt">
-                    📊 <span id="stat-step">1/3</span>
+                <div class="stat-item" title="Runde">
+                    📊 <span id="stat-step">1/10</span>
                 </div>
                 <div class="stat-item" title="Nutzer">
                     👤 <span id="stat-user">Gast</span>
@@ -430,8 +468,8 @@
                 <div class="welcome-screen">
                     <h1 class="welcome-title">Willkommen im Netz</h1>
                     <div class="welcome-desc">
-                        Du bist gerade auf Social Media unterwegs und bemerkst dabei die verschiedensten Behauptungen. Du kannst sie <b>Teilen</b>, <b>Überprüfen</b> oder <b>Ignorieren</b>.<br><br>
-                        Wenn du falsche Informationen jedoch ignorierst oder teilst, wird dies Konsequenzen haben!
+                        Du bist auf Social Media unterwegs und wirst mit 10 verschiedenen Behauptungen konfrontiert – von einfach bis extrem schwer (inklusive subtiler Propaganda-Tricks und Halbwahrheiten).<br><br>
+                        Du kannst Beiträge <b>Teilen</b>, <b>Überprüfen</b> oder <b>Ignorieren</b>. Pass auf: Falsche Entscheidungen haben Konsequenzen für deine Filterblase!
                     </div>
                     <div class="input-group">
                         <label for="username">Dein Vorname oder Nutzername:</label>
@@ -459,12 +497,27 @@
                     </div>
                     
                     <div id="extra-inspection-area">
-                        <!-- Hier erscheinen Account-Infos & Kommentare beim Prüfen -->
+                        <!-- Account & Kommentare -->
                     </div>
                 </div>
 
                 <div class="options-container" id="options-container">
                     <!-- Dynamic Buttons -->
+                </div>
+            </div>
+
+            <!-- CHAT SCREEN -->
+            <div class="screen" id="screen-chat">
+                <div style="margin-bottom: 12px; font-weight: 600; font-size: 0.9rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+                    💬 Nachricht von <span id="chat-sender-name" style="color: var(--text);">Figur</span>
+                </div>
+                
+                <div class="chat-box" id="chat-box">
+                    <!-- Chat Messages -->
+                </div>
+
+                <div class="options-container" id="chat-options-container">
+                    <!-- Chat Buttons -->
                 </div>
             </div>
 
@@ -475,8 +528,8 @@
                     Hier ist die Analyse deines Verhaltens im Algorithmus:
                 </p>
 
-                <div id="results-list">
-                    <!-- Results dynamically inserted -->
+                <div id="results-list" style="max-height: 250px; overflow-y: auto;">
+                    <!-- Results -->
                 </div>
 
                 <button class="btn" id="btn-restart" style="margin-top: 10px;">
@@ -495,100 +548,239 @@
                     Feedback-Text hier...
                 </div>
                 <button class="btn" id="modal-btn-next">
-                    Weiter zum nächsten Beitrag ➡️
+                    Weiter ➡️
                 </button>
             </div>
         </div>
     </div>
         <script>
-        // DATENBANK MIT BEHAUPTUNGEN, ACCOUNTS UND KOMMENTAREN
-        const simData = [
+        // 10 BEHAUPTUNGEN (VON EINFACH BIS SEHR SCHWER)
+        const feedItems = [
             {
-                author: "Eil-News_24",
-                avatar: "🔥",
-                tag: "#Eilmeldung #Krise",
-                content: "🚨 SCHOCK-STUDIE ENTHÜLLT: Neue Regierungsverordnung könnte das Aus für private Bargeldreserven bedeuten! Sollen wir Bürger jetzt komplett kontrolliert werden?! TEILT DIESEN BEITRAG, BEVOR ER GELÖSCHT WIRD! 🚨",
-                accountProfile: "<b>Profil-Check:</b> 'Eil-News_24' • Erstellt vor 3 Tagen • 120 Follower • Kein Impressum • Postet ausschließlich reißerische Panik-Meldungen.",
+                id: 1, type: "feed", difficulty: "Einfach",
+                author: "Eil-News_24", avatar: "🔥", tag: "#Eilmeldung",
+                content: "🚨 SCHOCK-STUDIE: Die Regierung verbietet ab nächste Woche jegliches Bargeld! Teilt diesen Beitrag, bevor er gelöscht wird!",
+                accountProfile: "<b>Profil-Check:</b> 'Eil-News_24' • Erst seit 2 Tagen online • 50 Follower • Kein Impressum.",
                 comments: [
-                    { author: "Markus_99", text: "Endlich sagt's mal jemand!! Die wollen uns komplett gläsern machen!" },
-                    { author: "Sabine_Berlin", text: "Schon geteilt in allen Gruppen!! Passt auf euch auf!!" },
-                    { author: "Faktenchecker_Max", text: "Halt stop, das ist kompletter Blödsinn. Es gibt keine solche Verordnung." }
+                    { author: "Markus", text: "Schon geteilt!! Unfassbar!" },
+                    { author: "Sarah", text: "Kompletter Fake, steht nirgendwo." },
+                    { author: "Tim", text: "Wird eh wieder gelöscht von denen da oben!" }
                 ],
                 options: [
-                    {
-                        text: "📤 Beitrag Teilen",
-                        bias: "propaganda",
-                        label: "Unreflektiertes Teilen",
-                        feedback: "💡 <b>Konsequenz:</b> Du hast ungeprüfte Panikmache geteilt. Der Algorithmus belohnt emotionale Reaktionen und zieht dich tiefer in die Spirale."
-                    },
-                    {
-                        text: "👁️ Beitrag Ignorieren",
-                        bias: "propaganda",
-                        label: "Unreflektiert Ignoriert",
-                        feedback: "💡 <b>Konsequenz:</b> Du hast weggeschaut, ohne die Falschmeldung zu melden. Solche Inhalte verbreiten sich dadurch ungestört weiter."
-                    }
+                    { text: "📤 Teilen", bias: "propaganda", label: "Auf plumpen Fake reingefallen", feedback: "💡 <b>Analyse:</b> Plumper Fake mit Panikmache. Wer hier teilt, fällt auf billige Tricks rein." },
+                    { text: "👁️ Ignorieren", bias: "neutral", label: "Platten Fake ignoriert", feedback: "💡 <b>Analyse:</b> Richtig erkannt und weggedrückt." }
                 ]
             },
             {
-                author: "KlareFakten.de",
-                avatar: "📊",
-                tag: "#Wissenschaft #Hintergrund",
-                content: "📈 Studie zur aktuellen Wirtschafts- und Energielage: Experten erklären die komplexen Zusammenhänge von Preissteigerungen und globalen Lieferketten. Hier die Daten im Überblick...",
-                accountProfile: "<b>Profil-Check:</b> 'KlareFakten.de' • Verifiziertes Medium • Gegründet 2015 • Offizielles Impressum & wissenschaftlicher Beirat.",
+                id: 2, type: "feed", difficulty: "Einfach",
+                author: "Wetter-Zentrale", avatar: "☀️", tag: "#Wetter",
+                content: "Morgen sonnig bei bis zu 24 Grad im ganzen Land.",
+                accountProfile: "<b>Profil-Check:</b> Offizieller Wetterdienst • Verifiziert • Seit 10 Jahren aktiv.",
                 comments: [
-                    { author: "Lena_W", text: "Endlich mal ein sachlicher Artikel statt nur Panikmache." },
-                    { author: "Thomas_K", text: "Sehr komplex, aber gut aufbereitet. Danke für die Zahlen!" },
-                    { author: "User_404", text: "Alles Schönfärberei von denen da oben!" }
+                    { author: "Lisa", text: "Endlich wieder Sommerwetter!" },
+                    { author: "Tom", text: "Perfekt zum Grillen." },
+                    { author: "Klaus", text: "Hoffentlich stimmts diesmal." }
                 ],
                 options: [
-                    {
-                        text: "📤 Beitrag Teilen",
-                        bias: "neutral",
-                        label: "Fundiertes Teilen",
-                        feedback: "💡 <b>Konsequenz:</b> Du teilst einen sachlichen und geprüften Beitrag. Das stärkt faktenbasierten Journalismus im Netz."
-                    },
-                    {
-                        text: "👁️ Beitrag Ignorieren",
-                        bias: "propaganda",
-                        label: "Sachlichkeit ignoriert",
-                        feedback: "💡 <b>Konsequenz:</b> Weil der Beitrag trocken und sachlich ist, ignorierst du ihn – der Algorithmus lernt daraus, dass du lieber Aufreger sehen willst."
-                    }
+                    { text: "📤 Teilen", bias: "neutral", label: "Harmlose Info geteilt", feedback: "💡 <b>Analyse:</b> Völlig harmloser und wahrer Beitrag." },
+                    { text: "👁️ Ignorieren", bias: "neutral", label: "Wetter ignoriert", feedback: "💡 <b>Analyse:</b> Auch okay, kein Schaden." }
                 ]
             },
             {
-                author: "Freie-Denker-Kanal",
-                avatar: "👁️",
-                tag: "#Geheimwissen #Erwacht",
-                content: "Wusstest du schon? 🌧️ Die Stürme der letzten Woche waren gar kein normales Wetter. Über geheime Antennenanlagen wird das Klima manipuliert, um Panik zu erzeugen! Macht die Augen auf!",
-                accountProfile: "<b>Profil-Check:</b> 'Freie-Denker-Kanal' • Pseudonymer Autor • Bekannt für Verschwörungserzählungen • Keine Quellenangaben.",
+                id: 3, type: "feed", difficulty: "Mittel",
+                author: "Gesundheitssplitter", avatar: "🍏", tag: "#Gesundheit",
+                content: "🍋 Achtung! Zitronensaft auf nüchternen Magen heilt chronische Entzündungen und stärkt das Immunsystem zu 100%!",
+                accountProfile: "<b>Profil-Check:</b> 'Gesundheitssplitter' • Privater Blog • Verkauft überteuerte Nahrungsergänzungsmittel.",
                 comments: [
-                    { author: "Klaus_W", text: "Wacht endlich auf Leute!! Es ist so offensichtlich!" },
-                    { author: "Astro_Aura", text: "Habe ich auch gehört, man darf nichts mehr glauben!" },
-                    { author: "Skeptiker_in", text: "Welche Antennenanlagen denn bitte? Völliger Humbug." }
+                    { author: "Heike", text: "Trinke ich schon jeden Tag, hilft super!" },
+                    { author: "DrMed_Lukas", text: "Vorsicht, Zitronensäure greift den Magen an. Das ist kein Wundermittel." },
+                    { author: "Ute", text: "Danke für den Tipp, wird probiert." }
                 ],
                 options: [
-                    {
-                        text: "📤 Beitrag Teilen",
-                        bias: "conspiracy",
-                        label: "Verschwörung verbreitet",
-                        feedback: "💡 <b>Konsequenz:</b> Du hast eine absurde Verschwörungstheorie geteilt und hilfst aktiv mit, Mythen im Mainstream zu verbreiten."
-                    },
-                    {
-                        text: "👁️ Beitrag Ignorieren",
-                        bias: "propaganda",
-                        label: "Verschwörung ignoriert",
-                        feedback: "💡 <b>Konsequenz:</b> Du hast weggeschaut. Ungeprüfte Mythen blühen auf, wenn man ihnen nicht widerspricht oder sie meldet."
-                    }
+                    { text: "📤 Teilen", bias: "propaganda", label: "Halbwahrheit verbreitet", typ: "fake", feedback: "💡 <b>Analyse:</b> Klassische Halbwahrheit (Gesund, aber heilt keine Krankheiten zu 100%). Wer das ungeprüft teilt, streut medizinische Mythen." },
+                    { text: "👁️ Ignorieren", bias: "neutral", label: "Gesundheits-Mythos ignoriert", feedback: "💡 <b>Analyse:</b> Gut ignoriert, da wissenschaftlich unbelegt." }
+                ]
+            },
+            {
+                id: 4, type: "feed", difficulty: "Mittel",
+                author: "Finanz-Fokus", avatar: "📈", tag: "#Wirtschaft",
+                content: "Aktuelle Auswertung: Die Inflationsrate ist im letzten Quartal um 0,5% gesunken.",
+                accountProfile: "<b>Profil-Check:</b> 'Finanz-Fokus' • Wirtschaftsmagazin • Seriöse Quellenangabe (Statistisches Bundesamt).",
+                comments: [
+                    { author: "Bernd", text: "Merk ich im Supermarkt aber nichts von." },
+                    { author: "Julia", text: "Ein kleiner Schritt in die richtige Richtung." },
+                    { author: "Frank", text: "Statistiken kann man sich auch schönreden." }
+                ],
+                options: [
+                    { text: "📤 Teilen", bias: "neutral", label: "Wahre Statistik geteilt", feedback: "💡 <b>Analyse:</b> Fundierte und korrekte Wirtschaftsdaten." },
+                    { text: "👁️ Ignorieren", bias: "neutral", label: "Statistik ignoriert", feedback: "💡 <b>Analyse:</b> Neutral geblieben." }
+                ]
+            },
+            {
+                id: 5, type: "feed", difficulty: "Schwer",
+                author: "Bürgerstimme-Direkt", avatar: "🛡️", tag: "#Stadtpolitik",
+                content: "🔍 Offizielle Zahlen belegen: Die Stadt gibt doppelt so viel Geld für Luxus-Autos von Politikern aus wie für Kitas! (Quelle im Artikel verlinkt)",
+                accountProfile: "<b>Profil-Check:</b> 'Bürgerstimme-Direkt' • Aktivistischer Blog • Verlinkt auf einen echten städtischen Haushaltsplan, lässt dort aber wichtige Kontextdaten weg.",
+                comments: [
+                    { author: "Stefan", text: "Unverschämtheit! Unsere Kinder müssen darben und die da oben fahren protzig rum!" },
+                    { author: "Anna", text: "Habe mir den Haushaltsplan angesehen... da steht das so aber gar nicht direkt drin?" },
+                    { author: "Michael", text: "Korrupter Saftladen!" }
+                ],
+                options: [
+                    { text: "📤 Teilen", bias: "propaganda", label: "Auf selektive Statistik reingefallen", feedback: "💡 <b>Analyse:</b> Profi-Propaganda-Trick (Cherry Picking)! Echte Zahlen werden aus dem Kontext gerissen, um künstliche Wut zu erzeugen." },
+                    { text: "👁️ Ignorieren", bias: "neutral", label: "Manipulativen Post ignoriert", feedback: "💡 <b>Analyse:</b> Gut gemacht, dich nicht von der polemischen Zuspitzung triggern zu lassen." }
+                ]
+            },
+            {
+                id: 6, type: "feed", difficulty: "Schwer",
+                author: "Eco-Future-Watch", avatar: "🌱", tag: "#Klima",
+                content: "Weltweite CO2-Emissionen sind durch neue Industriestandards im Vorjahr um 3% zurückgegangen – ein historischer Durchbruch für die Energiewende.",
+                accountProfile: "<b>Profil-Check:</b> 'Eco-Future-Watch' • Umwelt-NGO • Zitiert eine komplexe Studie, lässt jedoch regionale Anstiege aus.",
+                comments: [
+                    { author: "David", text: "Endlich mal gute Nachrichten!" },
+                    { author: "Lena", text: "Gilt aber wohl leider nicht für alle Kontinente..." },
+                    { author: "Chris", text: "Weiter so!" }
+                ],
+                options: [
+                    { text: "📤 Teilen", bias: "neutral", label: "Fortschritt geteilt", feedback: "💡 <b>Analyse:</b> Die Studie ist zwar echt, aber etwas schöngeredet. Das Teilen ist dennoch vertretbar." },
+                    { text: "👁️ Ignorieren", bias: "neutral", label: "Klima-Post ignoriert", feedback: "💡 <b>Analyse:</b> Neutral geblieben." }
+                ]
+            },
+            {
+                id: 7, type: "feed", difficulty: "Sehr schwer (Experten-Level)",
+                author: "Global-Tech-Insights", avatar: "💡", tag: "#Technologie",
+                content: "Wissenschaftliche Auswertung zeigt: Künstliche Intelligenz verbraucht in Rechenzentren mittlerweile mehr Strom als ganze Kleinländern zusammen. Sofortiges Stoppen gefordert!",
+                accountProfile: "<b>Profil-Check:</b> 'Global-Tech-Insights' • Scheinbar neutrales Tech-Institut • Finanziert von einer konkurrierenden Industrielobby, die eigene Server-Modelle betreibt.",
+                comments: [
+                    { author: "Paul", text: "Vollkommen Wahnsinn, das treibt uns in die Klimakatastrophe!" },
+                    { author: "Tina", text: "Wartet mal, der Stromverbrauch pro Rechenleistung ist laut anderen Studien pro Jahr gesunken..." },
+                    { author: "Jonas", text: "Abschalten, sofort!" }
+                ],
+                options: [
+                    { text: "📤 Teilen", bias: "propaganda", label: "Gezielte Lobby-Propaganda gestreut", feedback: "💡 <b>Analyse:</b> Extrem schwerer Trick! Die Kernzahl stimmt grob, aber sie wird von einer Konkurrenzlobby instrumentalisiert, um Panik zu schüren und Gesetze zu beeinflussen." },
+                    { text: "👁️ Ignorieren", bias: "neutral", label: "Lobby-Framing umschifft", feedback: "💡 <b>Analyse:</b> Sehr stark! Du hast dich von der vermeintlichen Seriosität nicht blenden lassen." }
+                ]
+            },
+            {
+                id: 8, type: "feed", difficulty: "Sehr schwer (Experten-Level)",
+                author: "Stimmungs-Barometer", avatar: "📊", tag: "#Gesellschaft",
+                content: "Repräsentative Umfrage: 84% aller Bürger fordern eine sofortige Neuausrichtung der Bildungspolitik!",
+                accountProfile: "<b>Profil-Check:</b> 'Stimmungs-Barometer' • Institut ohne offene Methodik • Online-Umfrage mit geschlossener Klick-Gruppe von nur 300 Personen.",
+                comments: [
+                    { author: "Sarah", text: "Endlich wacht die Mehrheit auf!" },
+                    { author: "Markus", text: "Wer wurde da befragt? 300 Leute auf Twitter? Nicht repräsentativ." },
+                    { author: "Karin", text: "Stimmt absolut, alles läuft schief." }
+                ],
+                options: [
+                    { text: "📤 Teilen", bias: "propaganda", label: "Auf Schein-Repräsentativität reingefallen", feedback: "💡 <b>Analyse:</b> Klassischer Trick: Das Wort 'repräsentativ' wird genutzt, obwohl die Umfrage völlig unseriös aufgesetzt wurde, um Druck auszuüben." },
+                    { text: "👁️ Ignorieren", bias: "neutral", label: "Schein-Umfrage ignoriert", feedback: "💡 <b>Analyse:</b> Ausgezeichnet erkannt, dass hier mit gefälschter Autorität gearbeitet wird." }
+                ]
+            },
+            {
+                id: 9, type: "feed", difficulty: "Mittel",
+                author: "Historische Fakten", avatar: "📜", tag: "#Geschichte",
+                content: "Wusstest du, dass die erste öffentliche Dampfeisenbahn im Jahr 1825 in England in Betrieb ging?",
+                accountProfile: "<b>Profil-Check:</b> 'Historische Fakten' • Bildungs-Account • Seit Jahren für akkurate historische Daten bekannt.",
+                comments: [
+                    { author: "Jan", text: "Interessanter Fun Fact!" },
+                    { author: "Sophie", text: "Wusste ich tatsächlich noch nicht." },
+                    { author: "Max", text: "Geschichte war nie meine Stärke, aber cool." }
+                ],
+                options: [
+                    { text: "📤 Teilen", bias: "neutral", label: "Historisches Faktum geteilt", feedback: "💡 <b>Analyse:</b> Korrektes historisches Datum." },
+                    { text: "👁️ Ignorieren", bias: "neutral", label: "Ignoriert", feedback: "💡 <b>Analyse:</b> Neutral." }
+                ]
+            },
+            {
+                id: 10, type: "feed", difficulty: "Einfach",
+                author: "Lokales Tierheim", avatar: "🐾", tag: "#Tierschutz",
+                content: "🐶 Unser Hund 'Bello' sucht dringend ein neues Zuhause! Wer hat ein Herz für den treuen Vierbeiner?",
+                accountProfile: "<b>Profil-Check:</b> Offizielles Tierheim der Stadt • Verifiziert • Mit Adresse und Telefonnummer.",
+                comments: [
+                    { author: "Anna", text: "Oh wie süß, ich drücke die Daumen!" },
+                    { author: "Carsten", text: "Habe den Beitrag geteilt, hoffentlich findet er jemanden." },
+                    { author: "Mona", text: "Ein Traum von Hund." }
+                ],
+                options: [
+                    { text: "📤 Teilen", bias: "neutral", label: "Hilfreicher Aufruf geteilt", feedback: "💡 <b>Analyse:</b> Sinnvoller sozialer Aufruf ohne böse Absichten." },
+                    { text: "👁️ Ignorieren", bias: "neutral", label: "Tierheim-Post ignoriert", feedback: "💡 <b>Analyse:</b> Kein Problem." }
                 ]
             }
         ];
 
+        // 5 ZUFÄLLIGE FIGUREN FÜR DEN CHAT
+        const chatPool = [
+            {
+                sender: "Mama 👩‍👧",
+                messages: [
+                    { sender: "Mama 👩‍👧", text: "Schatz, hast du das im Netz gesehen? Angeblich wird Wasser in unserer Stadt ab morgen rationiert! 😱", type: "received" },
+                    { sender: "Mama 👩‍👧", text: "Soll ich direkt im Supermarkt Vorräte kaufen?", type: "received" }
+                ],
+                options: [
+                    { text: "📤 Nachricht in Familien-Gruppe teilen", bias: "propaganda", label: "Panik im Chat verbreitet", feedback: "💡 <b>Konsequenz:</b> Du hast die unbegründete Angst deiner Mutter verstärkt und Hamsterkäufe ausgelöst." },
+                    { text: "🔍 Nachprüfen und Mama Entwarnung geben", bias: "neutral", label: "Kettenbrief gestoppt", feedback: "💡 <b>Konsequenz:</b> Perfekt! Du hast nachgesehen, dass es eine alte Falschmeldung von vor 3 Jahren ist." },
+                    { text: "👁️ Ignorieren", bias: "neutral", label: "Chat ignoriert", feedback: "💡 <b>Konsequenz:</b> Mama bleibt in ihrer Sorge allein." }
+                ]
+            },
+            {
+                sender: "Freund Ben 📱",
+                messages: [
+                    { sender: "Freund Ben 📱", text: "Ey, hast du das Video gesehen, wo behauptet wird, dass Wahlen komplett manipuliert sind?", type: "received" },
+                    { sender: "Freund Ben 📱", text: "Der Typ in dem Video hat echt überzeugende Diagramme gezeigt!", type: "received" }
+                ],
+                options: [
+                    { text: "📤 Dem Video zustimmen & weiterleiten", bias: "conspiracy", label: "Demokratie-Skepsis gestreut", feedback: "💡 <b>Konsequenz:</b> Du hast ungeprüft Misstrauen in demokratische Prozesse geschürt." },
+                    { text: "🔍 Ben erklären, warum die Diagramme Fake sind", bias: "neutral", label: "Kompetent aufgeklärt", feedback: "💡 <b>Konsequenz:</b> Stark! Du hast im direkten Gespräch sachlichen Gegenwind geleistet." },
+                    { text: "👁️ Thema wechseln", bias: "neutral", label: "Ausgewichen", feedback: "💡 <b>Konsequenz:</b> Dem Konflikt aus dem Weg gegangen." }
+                ]
+            },
+            {
+                sender: "Mitschülerin Lea 🎒",
+                messages: [
+                    { sender: "Mitschülerin Lea 🎒", text: "Sag mal, stimmt es, dass unsere Schule nächstes Jahr komplett auf Online-Unterricht umstellt wegen Energiemangel?", type: "received" },
+                    { sender: "Mitschülerin Lea 🎒", text: "Steht auf so einem neuen Info-Kanal auf Insta.", type: "received" }
+                ],
+                options: [
+                    { text: "📤 Story dazu posten ('Krass, wieder Lockdown!')", bias: "propaganda", label: "Gerücht verbreitet", feedback: "💡 <b>Konsequenz:</b> Du hast ein unbestätigtes Schülergerücht in die Welt gesetzt." },
+                    { text: "🔍 Sekretariat-Info prüfen / Lea beruhigen", bias: "neutral", label: "Gerücht entkräftet", feedback: "💡 <b>Konsequenz:</b> Souverän den Fake als Schüler-Gerede entlarvt." },
+                    { text: "👁️ Nicht antworten", bias: "neutral", label: "Ignoriert", feedback: "💡 <b>Konsequenz:</b> Gerücht bliebt unkommentiert." }
+                ]
+            },
+            {
+                sender: "Onkel Jürgen 🚙",
+                messages: [
+                    { sender: "Onkel Jürgen 🚙", text: "Hallo! Schau dir mal das Video an, das ich dir geschickt habe. Da wird bewiesen, dass die Spritpreise absichtlich erfunden sind!", type: "received" },
+                    { sender: "Onkel Jürgen 🚙", text: "Müssen wir uns alle wehren!!" },
+                    { sender: "Onkel Jürgen 🚙", text: "Teil das unbedingt weiter!", type: "received" }
+                ],
+                options: [
+                    { text: "📤 Auf Onkels Wunsch hin teilen", bias: "propaganda", label: "Ketten-Propaganda bedient", feedback: "💡 <b>Konsequenz:</b> Du hast Onkels Verschwörungstheorie im Familienkreis salonfähig gemacht." },
+                    { text: "🔍 Sachlich Fakten zu Rohölmärkten erklären", bias: "neutral", label: "Wütenden Onkel beruhigt", feedback: "💡 <b>Konsequenz:</b> Respekt, dass du sachlich geblieben bist!" },
+                    { text: "👁️ Kurz mit 'Haha ok' abwimmeln", bias: "neutral", label: "Abgewimmelt", feedback: "💡 <b>Konsequenz:</b> Diskussion geschickt vermieden." }
+                ]
+            },
+            {
+                sender: "Influencer-Bot 🤖",
+                messages: [
+                    { sender: "Influencer-Bot 🤖", text: "Hey! Du wurdest ausgewählt für ein exklusives Krypto-Gewinnspiel! 💰", type: "received" },
+                    { sender: "Influencer-Bot 🤖", text: "Klicke jetzt auf den Link und verdopple dein Taschengeld in 10 Minuten!!", type: "received" }
+                ],
+                options: [
+                    { text: "📤 Link teilen und mitmachen", bias: "propaganda", label: "Auf Betrug reingefallen", feedback: "💡 <b>Konsequenz:</b> Das war eine klassische Scam-Falle zum Datendiebstahl!" },
+                    { text: "👁️ Sofort blockieren & melden", bias: "neutral", label: "Scam abgewehrt", feedback: "💡 <b>Konsequenz:</b> Sehr gut! Betrügerischen Bot direkt aus dem Verkehr gezogen." }
+                ]
+            }
+        ];
+
+        // SPIEL-ZUSTAND
+        let activeSequence = []; // Enthält gemischt die 10 Feeds und zufällige Chats
         let currentStep = 0;
         let userName = "Alex";
         let userChoices = [];
 
         const screenWelcome = document.getElementById("screen-welcome");
         const screenFeed = document.getElementById("screen-feed");
+        const screenChat = document.getElementById("screen-chat");
         const screenResults = document.getElementById("screen-results");
         
         const btnStart = document.getElementById("btn-start");
@@ -622,183 +814,15 @@
             currentStep = 0;
             userChoices = [];
             
+            // Generiere eine abwechslungsreiche Sequenz: Alle 10 Feeds + 5 zufällig eingestreute Chats
+            buildRandomSequence();
+            
             renderStep();
         }
 
-        function renderStep() {
-            if (currentStep >= simData.length) {
-                showResults();
-                return;
-            }
-
-            const progressPercent = (currentStep / simData.length) * 100;
-            progressFill.style.width = progressPercent + "%";
-            statStep.innerText = `${currentStep + 1}/${simData.length}`;
-
-            const data = simData[currentStep];
-
-            screenFeed.classList.add("active");
-            document.getElementById("post-avatar").innerText = data.avatar;
-            document.getElementById("post-author").innerText = data.author;
-            document.getElementById("post-tag").innerText = data.tag;
-            document.getElementById("post-content").innerText = data.content;
+        function buildRandomSequence() {
+            activeSequence = [];
+            let chatQueue = [...chatPool].sort(() => Math.random() - 0.5); // Mischen
             
-            // Extra Bereich leeren
-            document.getElementById("extra-inspection-area").innerHTML = "";
-
-            renderMainOptions(data);
-        }
-
-        function renderMainOptions(data) {
-            const optionsContainer = document.getElementById("options-container");
-            optionsContainer.innerHTML = "";
-
-            // 1. Teilen Button
-            const btnShare = document.createElement("button");
-            btnShare.className = "option-btn";
-            btnShare.innerText = "📤 Teilen";
-            btnShare.addEventListener("click", () => handleChoice(data.options[0]));
-            optionsContainer.appendChild(btnShare);
-
-            // 2. Überprüfen Button
-            const btnCheck = document.createElement("button");
-            btnCheck.className = "option-btn";
-            btnCheck.innerText = "🔍 Überprüfen (Account & Kommentare ansehen)";
-            btnCheck.addEventListener("click", () => showInspectionView(data));
-            optionsContainer.appendChild(btnCheck);
-
-            // 3. Ignorieren Button
-            const btnIgnore = document.createElement("button");
-            btnIgnore.className = "option-btn";
-            btnIgnore.innerText = "👁️ Ignorieren";
-            btnIgnore.addEventListener("click", () => handleChoice(data.options[1]));
-            optionsContainer.appendChild(btnIgnore);
-        }
-
-        function showInspectionView(data) {
-            // Zeige Account-Profil und Kommentare im scrollbaren Post-Bereich
-            const extraArea = document.getElementById("extra-inspection-area");
-            
-            let commentsHTML = "";
-            data.comments.forEach(c => {
-                commentsHTML += `
-                    <div class="comment-item">
-                        <div class="comment-author">${c.author}</div>
-                        <div>${c.text}</div>
-                    </div>
-                `;
-            });
-
-            extraArea.innerHTML = `
-                <div class="account-profile-box">
-                    ${data.accountProfile}
-                </div>
-                <div class="comments-section">
-                    <div class="comments-title">💬 Erste Kommentare unter dem Beitrag (scrollbar):</div>
-                    ${commentsHTML}
-                </div>
-            `;
-
-            // Nach dem Prüfen hat der Nutzer nun die finale Entscheidung: Teilen, Ignorieren oder Zurück
-            const optionsContainer = document.getElementById("options-container");
-            optionsContainer.innerHTML = "";
-
-            const btnShare = document.createElement("button");
-            btnShare.className = "option-btn";
-            btnShare.innerText = "📤 Doch Teilen";
-            btnShare.addEventListener("click", () => handleChoice(data.options[0]));
-            optionsContainer.appendChild(btnShare);
-
-            const btnIgnore = document.createElement("button");
-            btnIgnore.className = "option-btn";
-            btnIgnore.innerText = "👁️ Doch Ignorieren";
-            btnIgnore.addEventListener("click", () => handleChoice(data.options[1]));
-            optionsContainer.appendChild(btnIgnore);
-
-            const btnBack = document.createElement("button");
-            btnBack.className = "option-btn btn-secondary";
-            btnBack.innerText = "⬅️ Zurück zur Ansicht";
-            btnBack.addEventListener("click", () => {
-                extraArea.innerHTML = "";
-                renderMainOptions(data);
-            });
-            optionsContainer.appendChild(btnBack);
-        }
-
-        function handleChoice(option) {
-            userChoices.push({
-                step: currentStep,
-                bias: option.bias,
-                label: option.label,
-                text: option.text,
-                feedback: option.feedback
-            });
-
-            modalTitle.innerHTML = `🔍 Analyse für ${userName}`;
-            modalBody.innerHTML = option.feedback;
-            modalFeedback.classList.add("active");
-        }
-
-        function advanceStep() {
-            modalFeedback.classList.remove("active");
-            currentStep++;
-            renderStep();
-        }
-
-        function showResults() {
-            progressFill.style.width = "100%";
-            screenFeed.classList.remove("active");
-            screenResults.classList.add("active");
-
-            let propagandaCount = 0;
-            let neutralCount = 0;
-            let conspiracyCount = 0;
-
-            userChoices.forEach(c => {
-                if (c.bias === "propaganda") propagandaCount++;
-                if (c.bias === "neutral") neutralCount++;
-                if (c.bias === "conspiracy") conspiracyCount++;
-            });
-
-            const summaryElem = document.getElementById("result-summary");
-            let summaryText = `<b>Hallo ${userName}!</b> `;
-
-            if (neutralCount >= 2) {
-                summaryText += "🛡️ <b>Ergebnis: Medienkompetent!</b> Du hast Quellen überprüft und dich nicht täuschen lassen.";
-            } else if (conspiracyCount >= 1) {
-                summaryText += "👁️ <b>Ergebnis: Anfällig für Mythen!</b> Du neigst dazu, ungeprüfte Behauptungen anzunehmen.";
-            } else {
-                summaryText += "⚡ <b>Ergebnis: In der Falle!</b> Du hast reißerische Inhalte unkritisch geteilt oder ignoriert.";
-            }
-
-            summaryElem.innerHTML = summaryText;
-
-            const resultsList = document.getElementById("results-list");
-            resultsList.innerHTML = "";
-
-            userChoices.forEach((choice, index) => {
-                const item = document.createElement("div");
-                item.className = "result-item";
-
-                let badgeClass = "badge-neutral";
-                if (choice.bias === "propaganda") badgeClass = "badge-propaganda";
-                if (choice.bias === "conspiracy") badgeClass = "badge-conspiracy";
-
-                item.innerHTML = `
-                    <div class="result-title">Szenario ${index + 1}: ${choice.label}</div>
-                    <div class="result-desc">Deine Wahl: "${choice.text}"</div>
-                    <span class="badge ${badgeClass}">${choice.bias.toUpperCase()}</span>
-                `;
-                resultsList.appendChild(item);
-            });
-        }
-
-        function restartSimulation() {
-            screenResults.classList.remove("active");
-            headerStats.style.display = "none";
-            screenWelcome.classList.add("active");
-            progressFill.style.width = "0%";
-        }
-    </script>
-</body>
-</html>
+            // Wir verteilen die 10 Feeds und streuen zwischendurch 5 Chats ein
+   
