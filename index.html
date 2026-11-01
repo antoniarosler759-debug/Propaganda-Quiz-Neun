@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -386,7 +386,7 @@
         }
     </style>
 </head>
-    <body>
+<body>
 
     <div class="sim-container">
         <div class="progress-bar">
@@ -399,7 +399,7 @@
             </div>
             <div class="header-stats" id="header-stats" style="display: none;">
                 <div class="stat-item" title="Posts gespielt">
-                    📊 <span id="stat-step">1/5</span>
+                    📊 <span id="stat-step">1/3</span>
                 </div>
                 <div class="stat-item" title="Nutzer">
                     👤 <span id="stat-user">Gast</span>
@@ -494,7 +494,7 @@
         </div>
     </div>
         <script>
-        // ORIGINAL SIMULATION DATA (Posts & Interactions)
+        // SIMULATION DATA MIT QUELLEN-CHECK
         const simData = [
             {
                 type: "feed",
@@ -504,22 +504,38 @@
                 content: "🚨 SCHOCK-STUDIE ENTHÜLLT: Neue Regierungsverordnung könnte das Aus für private Bargeldreserven bedeuten! Sollen wir Bürger jetzt komplett kontrolliert werden?! TEILT DIESEN BEITRAG, BEVOR ER GELÖSCHT WIRD! 🚨",
                 options: [
                     {
-                        text: "🔁 Sofort in allen Gruppen teilen & warnen!",
+                        text: "Teilen & in der Story posten",
                         bias: "propaganda",
-                        label: "Propaganda-Verstärker",
-                        feedback: "💡 <b>Algorithmus-Effekt:</b> Du hast ungeprüfte Panikmache geteilt. Der Algorithmus belohnt emotionale Reaktionen mit hoher Reichweite. Du gerätst tiefer in eine Radikalisierungs-Spirale."
+                        label: "Unreflektiertes Teilen",
+                        feedback: "💡 <b>Algorithmus-Effekt:</b> Durch das schnelle Teilen hilfst du mit, ungeprüfte Panikmache zu verbreiten."
                     },
                     {
-                        text: "🤔 Erstmal Fact-Checken & Regierungsquelle suchen.",
+                        text: "🔍 Account & Quelle genauer prüfen",
+                        action: "check_source",
+                        subStep: {
+                            accountInfo: "<b>Kanal-Info:</b> 'Eil-News_24' (Erstellt vor 3 Tagen, kein Impressum, 120 Follower, Verlinkung führt zu einem anonymen Blog).",
+                            question: "Glaubst du dieser Quelle und teilst du die Information jetzt?",
+                            options: [
+                                {
+                                    text: "Ja, klingt trotzdem glaubwürdig -> Teilen",
+                                    bias: "propaganda",
+                                    label: "Auf Fake-Account reingefallen",
+                                    feedback: "💡 <b>Reingefallen:</b> Der Account hatte kein Impressum und war erst 3 Tage alt. Trotzdem hast du der Information vertraut."
+                                },
+                                {
+                                    text: "Nein, unseriöse Quelle -> Beitrag ignorieren & melden",
+                                    bias: "neutral",
+                                    label: "Fake-Quelle entlarvt",
+                                    feedback: "💡 <b>Super gemacht!</b> Du hast das fehlende Impressum und das junge Account-Alter erkannt und die Falschmeldung gestoppt."
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        text: "Einfach weiter-scrollen",
                         bias: "neutral",
-                        label: "Kritischer Denker",
-                        feedback: "💡 <b>Algorithmus-Effekt:</b> Du hast reflektiert gehandelt. Sachliche Inhalte erzeugen weniger schnelle Klicks, bieten aber Schutz vor Manipulation."
-                    },
-                    {
-                        text: "💬 Kommentieren: 'Alles gesteuert von den Elite-Geheimbünden!'",
-                        bias: "conspiracy",
-                        label: "Verschwörungs-Narrativ",
-                        feedback: "💡 <b>Algorithmus-Effekt:</b> Du hast ein Verschwörungsnarrativ bedient. Dein Feed wird ab jetzt verstärkt mit Inhalten gefüttert, die Feindbilder bedienen."
+                        label: "Neutrales Verhalten",
+                        feedback: "💡 <b>Algorithmus-Effekt:</b> Du lässt dich von der reißerischen Aufmachung nicht triggern."
                     }
                 ]
             },
@@ -532,22 +548,38 @@
                 ],
                 options: [
                     {
-                        text: "Schreiben: 'Mama, das ist ein Fake/Kettenbrief. Bitte nicht weiterleiten!'",
+                        text: "Kurz antworten: 'Ist ein Kettenbrief, stimmt nicht.'",
                         bias: "neutral",
-                        label: "Aufklärend",
-                        feedback: "💡 <b>Medienkompetenz:</b> Super reagiert! Aufklärung im persönlichen Umfeld durch Faktenchecks durchbricht die Infektionskette von Falschmeldungen."
+                        label: "Sachliche Aufklärung",
+                        feedback: "💡 <b>Medienkompetenz:</b> Super reagiert! Du klärst dein Umfeld sachlich auf."
                     },
                     {
-                        text: "Schreiben: 'Ja krass! Ich wusste es, wir werden alle überwacht!!'",
-                        bias: "conspiracy",
-                        label: "Panik-Bestätigung",
-                        feedback: "💡 <b>Echokammer:</b> Du hast die unbegründete Angst deiner Mutter verstärkt und die Falschmeldung als wahr bestätigt."
+                        text: "🔍 Erstmal im Internet nach der angeblichen Verordnung suchen",
+                        action: "check_source",
+                        subStep: {
+                            accountInfo: "<b>Suchergebnis:</b> Keine offizielle Ministeriums-Seite berichtet darüber. Nur zwei dubiose Forenbeiträge ohne Autorennennung verweisen darauf.",
+                            question: "Wie antwortest du Mama nach deiner Recherche?",
+                            options: [
+                                {
+                                    text: "Schreiben: 'Habe nachgeschaut, gibt keine offiziellen Belege dafür. Ist Fake!'",
+                                    bias: "neutral",
+                                    label: "Faktencheck erfolgreich",
+                                    feedback: "💡 <b>Hervorragend!</b> Du hast erst recherchiert und dann die Falschmeldung entlarvt."
+                                },
+                                {
+                                    text: "Schreiben: 'Steht in Foren, könnte also was dran sein!'",
+                                    bias: "conspiracy",
+                                    label: "Unsichere Quellen akzeptiert",
+                                    feedback: "💡 <b>Achtung:</b> Anonyme Forenbeiträge sind keine verlässlichen Quellen."
+                                }
+                            ]
+                        }
                     },
                     {
-                        text: "Schreiben: 'Teil das schnell mit Tante Gabi und Omi!!'",
+                        text: "An andere Freunde weiterleiten",
                         bias: "propaganda",
-                        label: "Kettenbrief-Motor",
-                        feedback: "💡 <b>Propaganda-Dynamik:</b> Desinformation verbreitet sich im privaten Kreis 6-mal schneller als offizielle Berichte, da Vertrauen ausgenutzt wird."
+                        label: "Weiterleiten",
+                        feedback: "💡 <b>Multiplikator:</b> Genau so verbreiten sich Falschmeldungen in Messengern."
                     }
                 ]
             },
@@ -559,81 +591,43 @@
                 content: "📈 Studie zur aktuellen Wirtschafts- und Energielage: Experten erklären die komplexen Zusammenhänge von Preissteigerungen und globalen Lieferketten. Hier die Daten im Überblick...",
                 options: [
                     {
-                        text: "🥱 Gähnen & schnell weiter-scrollen. Zu trocken.",
+                        text: "Weiter-scrollen",
                         bias: "propaganda",
-                        label: "Aufmerksamkeits-Falle",
-                        feedback: "💡 <b>Algorithmus-Effekt:</b> Komplexe, sachliche Fakten erzeugen weniger Emotionen. Wer sie ignoriert, bekommt vom Algorithmus stattdessen wieder reißerische Skandale vorgesetzt."
+                        label: "Desinteresse an Fakten",
+                        feedback: "💡 <b>Algorithmus-Effekt:</b> Sachliche Berichte erzeugen weniger Emotionen. Wer sie wegklickt, bekommt lauteren Content."
                     },
                     {
-                        text: "📖 Aufmerksam lesen, Grafiken prüfen & sachlich bewerten.",
+                        text: "Liken & aufmerksam lesen",
                         bias: "neutral",
-                        label: "Informations-Suche",
-                        feedback: "💡 <b>Algorithmus-Effekt:</b> Du nimmst dir Zeit für Differenzierung. So durchbrichst du die Schwarz-Weiß-Malerei der Propaganda."
+                        label: "Informiert bleiben",
+                        feedback: "💡 <b>Algorithmus-Effekt:</b> Du unterstützt fundierte Inhalte im Feed."
                     },
                     {
-                        text: "😡 Wütenden Smile hinterlassen: 'Lügenpresse! Alles bezahlt!'",
-                        bias: "conspiracy",
-                        label: "System-Misstrauen",
-                        feedback: "💡 <b>Algorithmus-Effekt:</b> Das Wut-Emoji signalisiert dem System hohes Engagement. Du wirst in Zukunft mehr Polarisierung sehen."
-                    }
-                ]
-            },
-            {
-                type: "feed",
-                author: "Freie-Denker-Kanal",
-                avatar: "👁️",
-                tag: "#Geheimwissen #Erwacht",
-                content: "Wusstest du schon? 🌧️ Die Stürme der letzten Woche waren gar kein normales Wetter. Über geheime Antennenanlagen wird das Klima manipuliert, um Panik zu erzeugen! Macht die Augen auf!",
-                options: [
-                    {
-                        text: "👍 Gefällt mir drücken & Kanal abonnieren.",
-                        bias: "conspiracy",
-                        label: "Verschwörungs-Abo",
-                        feedback: "💡 <b>Algorithmus-Effekt:</b> Du bist offiziell in der Filterblase gelandet. Der Algorithmus isoliert dich nun von Gegenargumenten."
-                    },
-                    {
-                        text: "⚠️ Beitrag als Falschinformation melden.",
-                        bias: "neutral",
-                        label: "Zivilcourage",
-                        feedback: "💡 <b>Plattform-Hygiene:</b> Durch Melden hilfst du, schädliche Falschmeldungen im Netz einzudämmen."
-                    },
-                    {
-                        text: "🔥 Teilen mit dem Text: 'Guckt euch an, wie wir belogen werden!'",
-                        bias: "propaganda",
-                        label: "Verstärker",
-                        feedback: "💡 <b>Multiplikator:</b> Du hilfst aktiven Propaganda-Akteuren dabei, unsinnige Mythen in den Mainstream zu tragen."
-                    }
-                ]
-            },
-            {
-                type: "feed",
-                author: "ZukunftsForum_EU",
-                avatar: "🌍",
-                tag: "#Politik #Diskurs",
-                content: "Wie soll unsere Stadt in 10 Jahren aussehen? Diskutiere mit beim Bürgerforum am Donnerstag. Verschiedene Parteien und Initiativen stellen ihre Pläne vor.",
-                options: [
-                    {
-                        text: "💬 Konstruktiv kommentieren & Vorschläge machen.",
-                        bias: "neutral",
-                        label: "Demokratischer Diskurs",
-                        feedback: "💡 <b>Demokratie-Stärkung:</b> Du nutzt soziale Medien für echte Teilhabe und lösungsorientierte Debatten."
-                    },
-                    {
-                        text: "💣 Kommentieren: 'Alles nur Show! Die da oben machen eh was sie wollen!'",
-                        bias: "conspiracy",
-                        label: "Demokratie-Skepsis",
-                        feedback: "💡 <b>Pessimismus-Spirale:</b> Pauschale Verurteilung zerstört den gesellschaftlichen Zusammenhalt und fördert Politikverdrossenheit."
-                    },
-                    {
-                        text: "➡️ Beitrag ignorieren und lieber nach Streit-Themen suchen.",
-                        bias: "propaganda",
-                        label: "Konflikt-Sucher",
-                        feedback: "💡 <b>Drama-Sucht:</b> Der Algorithmus lernt, dass dich friedliche Lösungen nicht interessieren, und liefert dir wieder Krawall-Nachrichten."
+                        text: "🔍 Autoren & Studie hinterfragen",
+                        action: "check_source",
+                        subStep: {
+                            accountInfo: "<b>Quellen-Check:</b> 'KlareFakten.de' verlinkt auf eine Peer-Reviewed-Studie von drei Universitäten mit offengelegten Finanzierungsquellen.",
+                            question: "Wie bewertest du diesen Beitrag nun?",
+                            options: [
+                                {
+                                    text: "Als sachlich & vertrauenswürdig einstufen",
+                                    bias: "neutral",
+                                    label: "Geprüfte Quelle akzeptiert",
+                                    feedback: "💡 <b>Richtig:</b> Wissenschaftliche Transparenz ist ein starkes Zeichen für Seriösität."
+                                },
+                                {
+                                    text: "Trotzdem als 'gekauft' abtun & weiterklicken",
+                                    bias: "conspiracy",
+                                    label: "Grundloses Misstrauen",
+                                    feedback: "💡 <b>Pauschalskepsis:</b> Wenn selbst wissenschaftlich geprüfte Fakten abgelehnt werden, gerät man leicht in Verschwörungserzählungen."
+                                }
+                            ]
+                        }
                     }
                 ]
             }
         ];
-                    // SIMULATION LOGIC STATE
+                 // SIMULATION LOGIC STATE
         let currentStep = 0;
         let userName = "Alex";
         let userChoices = [];
@@ -741,6 +735,32 @@
         }
 
         function handleChoice(option) {
+            // Wenn der Nutzer auf "Informieren / Quelle prüfen" klickt:
+            if (option.action === "check_source" && option.subStep) {
+                const sub = option.subStep;
+                
+                // Text im Post anpassen (zeigt jetzt Account-Infos & die Nachfrage an)
+                document.getElementById("post-content").innerHTML = `
+                    <div style="background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; padding: 10px; margin-bottom: 12px; border-radius: 4px;">
+                        ${sub.accountInfo}
+                    </div>
+                    <b>${sub.question}</b>
+                `;
+
+                // Optionen durch die 2 neuen Entscheidungsmöglichkeiten ersetzen
+                const optionsContainer = document.getElementById("options-container");
+                optionsContainer.innerHTML = "";
+
+                sub.options.forEach((subOpt) => {
+                    const btn = document.createElement("button");
+                    btn.className = "option-btn";
+                    btn.innerText = subOpt.text;
+                    btn.addEventListener("click", () => handleChoice(subOpt));
+                    optionsContainer.appendChild(btn);
+                });
+                return;
+            }
+
             userChoices.push({
                 step: currentStep,
                 bias: option.bias,
@@ -781,12 +801,12 @@
             const summaryElem = document.getElementById("result-summary");
             let summaryText = `<b>Hallo ${userName}!</b> `;
 
-            if (neutralCount >= 3) {
-                summaryText += "🛡️ <b>Ergebnis: Widerstandsfähig!</b> Du lässt dich nicht so leicht von reißerischen Überschriften oder Verschwörungserzählungen triggern. Du hinterfragst Quellen und schützt deine Filterblase.";
-            } else if (conspiracyCount >= 2) {
-                summaryText += "👁️ <b>Ergebnis: Anfällig für Verschwörungserzählungen!</b> Du neigst dazu, hinter komplexen Ereignissen geheime Mächte oder Manipulationen zu vermuten. Der Algorithmus würde dich schnell in tiefe Kanäle ziehen.";
+            if (neutralCount >= 2) {
+                summaryText += "🛡️ <b>Ergebnis: Widerstandsfähig!</b> Du prüfst Quellen und lässt dich nicht von reißerischen Maschen täuschen.";
+            } else if (conspiracyCount >= 1) {
+                summaryText += "👁️ <b>Ergebnis: Anfällig für ungeprüfte Narrative!</b> Du neigst dazu, fragwürdige Quellen oder Aussagen zu akzeptieren.";
             } else {
-                summaryText += "⚡ <b>Ergebnis: Mitten in der Aufmerksamkeitsfalle!</b> Du teilst schnell emotionale Inhalte und fütterst den Algorithmus mit Klicks. Genau das nutzen Propaganda-Akteure aus.";
+                summaryText += "⚡ <b>Ergebnis: In der Falle!</b> Du teilst Inhalte oft ungeprüft weiter, statt den Account oder Hintergrund zu hinterfragen.";
             }
 
             summaryElem.innerHTML = summaryText;
