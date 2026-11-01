@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -6,592 +6,816 @@
     <title>Propaganda & Algorithmus Sim</title>
     <style>
         :root {
-            --bg-color: #0f172a;
+            --bg: #0f172a;
             --card-bg: #1e293b;
-            --text-color: #f8fafc;
+            --text: #f8fafc;
             --text-muted: #94a3b8;
             --primary: #3b82f6;
             --danger: #ef4444;
             --warning: #f59e0b;
-            --success: #22c55e;
+            --success: #10b981;
             --border: #334155;
+            --accent: #8b5cf6;
+            --propaganda-red: #dc2626;
+            --neutral-blue: #0284c7;
+            --conspiracy-purple: #7c3aed;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 15px;
         }
 
-        .screen {
+        .sim-container {
             width: 100%;
-            max-width: 500px;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .card {
+            max-width: 600px;
             background-color: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            position: relative;
         }
 
-        h1, h2, h3 {
-            margin-top: 0;
-            color: var(--text-color);
-        }
-
-        .input-group {
-            margin: 20px 0;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-muted);
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background-color: #0f172a;
-            color: white;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-
-        .app-header {
+        .header {
+            background-color: rgba(15, 23, 42, 0.8);
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
-            margin-bottom: 16px;
-            font-size: 14px;
-            color: var(--text-muted);
-            background: var(--card-bg);
-            padding: 10px 16px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
+            align-items: center;
+            backdrop-filter: blur(8px);
         }
 
-        .post-header {
-            margin-bottom: 12px;
-        }
-
-        .author-name {
-            font-weight: bold;
+        .header-title {
+            font-weight: 700;
+            font-size: 1.1rem;
             color: var(--primary);
-            background: rgba(59, 130, 246, 0.1);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .post-body {
-            font-size: 18px;
+        .header-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .content-body {
+            padding: 24px;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .welcome-screen {
+            text-align: center;
+        }
+
+        .welcome-title {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .welcome-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
             line-height: 1.5;
             margin-bottom: 24px;
         }
 
-        .post-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
         }
 
-        .action-buttons-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary);
         }
 
         .btn {
-            padding: 12px 16px;
+            width: 100%;
+            padding: 14px;
             border: none;
             border-radius: 8px;
-            font-weight: bold;
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
             cursor: pointer;
-            font-size: 14px;
-            transition: opacity 0.2s, transform 0.1s;
+            transition: background-color 0.2s, transform 0.1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background-color: #2563eb;
         }
 
         .btn:active {
-            transform: scale(0.98);
+            transform: scale(0.99);
         }
 
-        .btn-primary { background-color: var(--primary); color: white; width: 100%; }
-        .btn-secondary { background-color: #475569; color: white; width: 100%; }
-        .btn-danger { background-color: var(--danger); color: white; }
-        .btn-neutral { background-color: #64748b; color: white; }
-        .btn-warning { background-color: var(--warning); color: #0f172a; }
+        .post-card {
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .author-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .author-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .post-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .post-content {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            white-space: pre-line;
+        }
+
+        .post-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.03);
+            color: var(--text);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .option-btn:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-color: var(--text-muted);
+        }
+
+        .chat-box {
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            height: 250px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .chat-msg {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .chat-msg.received {
+            background-color: #334155;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .chat-msg.sent {
+            background-color: var(--primary);
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-msg-author {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 4px;
+        }
 
         .modal {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
+            background-color: rgba(15, 23, 42, 0.9);
+            display: none;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            box-sizing: border-box;
-            z-index: 100;
+            z-index: 10;
+            backdrop-filter: blur(4px);
         }
 
-        .modal-content {
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
             width: 100%;
             max-width: 450px;
-            max-height: 80vh;
-            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
 
-        .comments-list {
-            background: #0f172a;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-            font-size: 14px;
-        }
-
-        .comments-list p {
-            margin: 8px 0;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 6px;
-        }
-
-        .comments-list p:last-child {
-            border-bottom: none;
-        }
-
-        .chat-card {
-            border: 2px solid var(--primary);
-        }
-
-        .chat-header {
+        .modal-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 12px;
-        }
-
-        .chat-header .avatar {
-            font-size: 28px;
-            background: var(--border);
-            padding: 6px;
-            border-radius: 50%;
-        }
-
-        .chat-body {
-            background: #0f172a;
-            padding: 14px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-            font-size: 16px;
-        }
-
-        .chat-options-container {
-            display: flex;
-            flex-direction: column;
             gap: 8px;
         }
 
-        #end-screen {
-            text-align: center;
-        }
-
-        .emoji-banner {
-            font-size: 64px;
+        .modal-body {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
             margin-bottom: 16px;
         }
 
-        .end-description {
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 24px;
+        .result-item {
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .result-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 0.95rem;
+        }
+
+        .result-desc {
+            font-size: 0.85rem;
             color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        .badge-propaganda { background-color: rgba(220, 38, 38, 0.2); color: #f87171; border: 1px solid var(--propaganda-red); }
+        .badge-neutral { background-color: rgba(2, 132, 199, 0.2); color: #38bdf8; border: 1px solid var(--neutral-blue); }
+        .badge-conspiracy { background-color: rgba(124, 58, 237, 0.2); color: #c084fc; border: 1px solid var(--conspiracy-purple); }
+
+        .progress-bar {
+            height: 6px;
+            width: 100%;
+            background-color: var(--border);
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
         }
     </style>
 </head>
-  <body>
+    <body>
 
-    <!-- STUFE 0: Startbildschirm / Namenseingabe -->
-    <div id="start-screen" class="screen card active">
-        <h1>Propaganda-Simulator</h1>
-        <p>Willkommen zur Simulation für Wirtschaftspolitik. Erkenne die Propaganda, durchschaue Fakes und passe auf, wem du vertraust!</p>
-        <div class="input-group">
-            <label for="username">Gib deinen Namen ein:</label>
-            <input type="text" id="username" placeholder="Dein Name..." autocomplete="off">
+    <div class="sim-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
         </div>
-        <button id="start-btn" class="btn btn-primary" onclick="startGame()">Spiel Starten</button>
-    </div>
 
-    <!-- MAIN APP SCREEN (Sichtbar wenn Spiel läuft) -->
-    <div id="game-screen" class="screen hidden">
-        
-        <!-- Topbar / Header -->
-        <header class="app-header">
-            <div class="user-badge">User: <span id="display-name">Spieler</span></div>
-            <div class="progress-badge">Fortschritt: <span id="event-count">0</span> / 12</div>
-        </header>
-
-        <!-- STUFE 1: Der Social Media Feed -->
-        <main id="feed-container" class="card">
-            <div class="post-header">
-                <span id="post-author" class="author-name">@User</span>
+        <div class="header">
+            <div class="header-title">
+                🤖 Algorithmus Sim
             </div>
-            <div id="post-content" class="post-body">
-                Behauptung lädt...
-            </div>
-            <div class="post-actions">
-                <button class="btn btn-secondary" onclick="openProfileCheck()">🔍 Profil & Kommentare prüfen</button>
-                <div class="action-buttons-row">
-                    <button class="btn btn-danger" onclick="makeFeedChoice('report')">🚨 Melden / Entlarven</button>
-                    <button class="btn btn-neutral" onclick="makeFeedChoice('ignore')">➡️ Ignorieren</button>
-                    <button class="btn btn-warning" onclick="makeFeedChoice('share')">📢 Glauben & Teilen</button>
+            <div class="header-stats" id="header-stats" style="display: none;">
+                <div class="stat-item" title="Posts gespielt">
+                    📊 <span id="stat-step">1/5</span>
                 </div>
-            </div>
-        </main>
-
-        <!-- STUFE 2: Overlay für Profil & Kommentare Prüfen -->
-        <div id="profile-modal" class="modal hidden">
-            <div class="modal-content card">
-                <h3>Account-Analyse</h3>
-                <div class="profile-info">
-                    <p><strong>Handle:</strong> <span id="modal-handle">@name</span></p>
-                    <p><strong>Bisherige Posts:</strong></p>
-                    <ul id="modal-history"></ul>
+                <div class="stat-item" title="Nutzer">
+                    👤 <span id="stat-user">Gast</span>
                 </div>
-                <hr>
-                <h4>Top-Kommentare:</h4>
-                <div id="modal-comments" class="comments-list"></div>
-                <button class="btn btn-secondary close-btn" onclick="closeProfileCheck()">Zurück zum Feed</button>
             </div>
         </div>
 
-        <!-- STUFE 3: WhatsApp Chat Popup (Familie/Freunde) -->
-        <div id="chat-modal" class="modal hidden">
-            <div class="modal-content chat-card">
-                <div class="chat-header">
-                    <span id="chat-sender-avatar" class="avatar">👤</span>
-                    <div>
-                        <h4 id="chat-sender-name">Name</h4>
-                        <small>Schreibt dir gerade...</small>
+        <div class="content-body">
+            <!-- START SCREEN -->
+            <div class="screen active" id="screen-welcome">
+                <div class="welcome-screen">
+                    <h1 class="welcome-title">Propaganda & Algorithmus Simulator</h1>
+                    <p class="welcome-desc">
+                        Willkommen zur interaktiven Simulation. Erlebe am eigenen Leib, wie soziale Netzwerke, Filterblasen und Echokammern dein Denken beeinflussen können. Triff deine Entscheidungen im Feed!
+                    </p>
+                    <div class="input-group">
+                        <label for="username">Dein Vorname oder Nutzername:</label>
+                        <input type="text" id="username" placeholder="z. B. Alex" value="Alex">
+                    </div>
+                    <button class="btn" id="btn-start">
+                        Simulation Starten 🚀
+                    </button>
+                </div>
+            </div>
+
+            <!-- FEED SCREEN -->
+            <div class="screen" id="screen-feed">
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="avatar" id="post-avatar">📢</div>
+                        <div class="author-info">
+                            <div class="author-name" id="post-author">Kanal-Name</div>
+                            <div class="post-time" id="post-time">Gerade eben • 🌐</div>
+                        </div>
+                    </div>
+                    <span class="post-tag" id="post-tag">#Eilmeldung</span>
+                    <div class="post-content" id="post-content">
+                        Beitragstext wird geladen...
                     </div>
                 </div>
-                <div class="chat-body">
-                    <p id="chat-message-text">Nachricht...</p>
+
+                <div class="options-container" id="options-container">
+                    <!-- Dynamic Buttons -->
                 </div>
-                <div id="chat-options" class="chat-options-container">
-                    <!-- Antwort-Buttons werden dynamisch eingefügt -->
+            </div>
+
+            <!-- CHAT SCREEN (FAMILY/MAMA) -->
+            <div class="screen" id="screen-chat">
+                <div style="margin-bottom: 12px; font-weight: 600; font-size: 0.9rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+                    💬 Nachricht von <span id="chat-sender-name" style="color: var(--text);">Familie</span>
                 </div>
+                
+                <div class="chat-box" id="chat-box">
+                    <!-- Dynamic Chat Messages -->
+                </div>
+
+                <div class="options-container" id="chat-options-container">
+                    <!-- Dynamic Chat Buttons -->
+                </div>
+            </div>
+
+            <!-- RESULT SCREEN -->
+            <div class="screen" id="screen-results">
+                <h2 style="margin-bottom: 12px; font-size: 1.4rem; text-align: center;">Auswertung deiner Filterblase 🎯</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; text-align: center;" id="result-summary">
+                    Hier ist die Analyse deines Verhaltens im Algorithmus:
+                </p>
+
+                <div id="results-list">
+                    <!-- Results dynamically inserted -->
+                </div>
+
+                <button class="btn" id="btn-restart" style="margin-top: 10px;">
+                    Simulation Neustarten 🔄
+                </button>
             </div>
         </div>
 
-    </div>
-
-    <!-- STUFE 4: Endauswertung (Die 5 Enden) -->
-    <div id="end-screen" class="screen card hidden">
-        <div id="end-emoji" class="emoji-banner">🎉</div>
-        <h2 id="end-title">Ergebnis</h2>
-        <p id="end-text" class="end-description"></p>
-        <p class="error-stats">Fehleranzahl: <strong id="final-errors">0</strong></p>
-        <button class="btn btn-primary" onclick="location.reload()">Nochmal spielen</button>
+        <!-- MODAL FOR FEEDBACK -->
+        <div class="modal" id="modal-feedback">
+            <div class="modal-card">
+                <div class="modal-title" id="modal-title">
+                    🔍 Algorithmus-Analyse
+                </div>
+                <div class="modal-body" id="modal-body">
+                    Feedback-Text hier...
+                </div>
+                <button class="btn" id="modal-btn-next">
+                    Weiter zum nächsten Beitrag ➡️
+                </button>
+            </div>
+        </div>
     </div>
         <script>
-        let playerName = "";
-        let errorCount = 0;
+        // ORIGINAL SIMULATION DATA (Posts & Interactions)
+        const simData = [
+            {
+                type: "feed",
+                author: "Eil-News_24",
+                avatar: "🔥",
+                tag: "#Eilmeldung #Krise",
+                content: "🚨 SCHOCK-STUDIE ENTHÜLLT: Neue Regierungsverordnung könnte das Aus für private Bargeldreserven bedeuten! Sollen wir Bürger jetzt komplett kontrolliert werden?! TEILT DIESEN BEITRAG, BEVOR ER GELÖSCHT WIRD! 🚨",
+                options: [
+                    {
+                        text: "🔁 Sofort in allen Gruppen teilen & warnen!",
+                        bias: "propaganda",
+                        label: "Propaganda-Verstärker",
+                        feedback: "💡 <b>Algorithmus-Effekt:</b> Du hast ungeprüfte Panikmache geteilt. Der Algorithmus belohnt emotionale Reaktionen mit hoher Reichweite. Du gerätst tiefer in eine Radikalisierungs-Spirale."
+                    },
+                    {
+                        text: "🤔 Erstmal Fact-Checken & Regierungsquelle suchen.",
+                        bias: "neutral",
+                        label: "Kritischer Denker",
+                        feedback: "💡 <b>Algorithmus-Effekt:</b> Du hast reflektiert gehandelt. Sachliche Inhalte erzeugen weniger schnelle Klicks, bieten aber Schutz vor Manipulation."
+                    },
+                    {
+                        text: "💬 Kommentieren: 'Alles gesteuert von den Elite-Geheimbünden!'",
+                        bias: "conspiracy",
+                        label: "Verschwörungs-Narrativ",
+                        feedback: "💡 <b>Algorithmus-Effekt:</b> Du hast ein Verschwörungsnarrativ bedient. Dein Feed wird ab jetzt verstärkt mit Inhalten gefüttert, die Feindbilder bedienen."
+                    }
+                ]
+            },
+            {
+                type: "chat",
+                sender: "Mama 👩‍👧",
+                messages: [
+                    { sender: "Mama 👩‍👧", text: "Du Schatz! Hast du das im Internet gelesen?? 😱", type: "received" },
+                    { sender: "Mama 👩‍👧", text: "Angeblich werden ab nächster Woche alle Schulnoten durch einen KI-Sozial-Score ersetzt! Ich habe das eben in einer WhatsApp-Gruppe bekommen!", type: "received" }
+                ],
+                options: [
+                    {
+                        text: "Schreiben: 'Mama, das ist ein Fake/Kettenbrief. Bitte nicht weiterleiten!'",
+                        bias: "neutral",
+                        label: "Aufklärend",
+                        feedback: "💡 <b>Medienkompetenz:</b> Super reagiert! Aufklärung im persönlichen Umfeld durch Faktenchecks durchbricht die Infektionskette von Falschmeldungen."
+                    },
+                    {
+                        text: "Schreiben: 'Ja krass! Ich wusste es, wir werden alle überwacht!!'",
+                        bias: "conspiracy",
+                        label: "Panik-Bestätigung",
+                        feedback: "💡 <b>Echokammer:</b> Du hast die unbegründete Angst deiner Mutter verstärkt und die Falschmeldung als wahr bestätigt."
+                    },
+                    {
+                        text: "Schreiben: 'Teil das schnell mit Tante Gabi und Omi!!'",
+                        bias: "propaganda",
+                        label: "Kettenbrief-Motor",
+                        feedback: "💡 <b>Propaganda-Dynamik:</b> Desinformation verbreitet sich im privaten Kreis 6-mal schneller als offizielle Berichte, da Vertrauen ausgenutzt wird."
+                    }
+                ]
+            },
+            {
+                type: "feed",
+                author: "KlareFakten.de",
+                avatar: "📊",
+                tag: "#Wissenschaft #Hintergrund",
+                content: "📈 Studie zur aktuellen Wirtschafts- und Energielage: Experten erklären die komplexen Zusammenhänge von Preissteigerungen und globalen Lieferketten. Hier die Daten im Überblick...",
+                options: [
+                    {
+                        text: "🥱 Gähnen & schnell weiter-scrollen. Zu trocken.",
+                        bias: "propaganda",
+                        label: "Aufmerksamkeits-Falle",
+                        feedback: "💡 <b>Algorithmus-Effekt:</b> Komplexe, sachliche Fakten erzeugen weniger Emotionen. Wer sie ignoriert, bekommt vom Algorithmus stattdessen wieder reißerische Skandale vorgesetzt."
+                    },
+                    {
+                        text: "📖 Aufmerksam lesen, Grafiken prüfen & sachlich bewerten.",
+                        bias: "neutral",
+                        label: "Informations-Suche",
+                        feedback: "💡 <b>Algorithmus-Effekt:</b> Du nimmst dir Zeit für Differenzierung. So durchbrichst du die Schwarz-Weiß-Malerei der Propaganda."
+                    },
+                    {
+                        text: "😡 Wütenden Smile hinterlassen: 'Lügenpresse! Alles bezahlt!'",
+                        bias: "conspiracy",
+                        label: "System-Misstrauen",
+                        feedback: "💡 <b>Algorithmus-Effekt:</b> Das Wut-Emoji signalisiert dem System hohes Engagement. Du wirst in Zukunft mehr Polarisierung sehen."
+                    }
+                ]
+            },
+            {
+                type: "feed",
+                author: "Freie-Denker-Kanal",
+                avatar: "👁️",
+                tag: "#Geheimwissen #Erwacht",
+                content: "Wusstest du schon? 🌧️ Die Stürme der letzten Woche waren gar kein normales Wetter. Über geheime Antennenanlagen wird das Klima manipuliert, um Panik zu erzeugen! Macht die Augen auf!",
+                options: [
+                    {
+                        text: "👍 Gefällt mir drücken & Kanal abonnieren.",
+                        bias: "conspiracy",
+                        label: "Verschwörungs-Abo",
+                        feedback: "💡 <b>Algorithmus-Effekt:</b> Du bist offiziell in der Filterblase gelandet. Der Algorithmus isoliert dich nun von Gegenargumenten."
+                    },
+                    {
+                        text: "⚠️ Beitrag als Falschinformation melden.",
+                        bias: "neutral",
+                        label: "Zivilcourage",
+                        feedback: "💡 <b>Plattform-Hygiene:</b> Durch Melden hilfst du, schädliche Falschmeldungen im Netz einzudämmen."
+                    },
+                    {
+                        text: "🔥 Teilen mit dem Text: 'Guckt euch an, wie wir belogen werden!'",
+                        bias: "propaganda",
+                        label: "Verstärker",
+                        feedback: "💡 <b>Multiplikator:</b> Du hilfst aktiven Propaganda-Akteuren dabei, unsinnige Mythen in den Mainstream zu tragen."
+                    }
+                ]
+            },
+            {
+                type: "feed",
+                author: "ZukunftsForum_EU",
+                avatar: "🌍",
+                tag: "#Politik #Diskurs",
+                content: "Wie soll unsere Stadt in 10 Jahren aussehen? Diskutiere mit beim Bürgerforum am Donnerstag. Verschiedene Parteien und Initiativen stellen ihre Pläne vor.",
+                options: [
+                    {
+                        text: "💬 Konstruktiv kommentieren & Vorschläge machen.",
+                        bias: "neutral",
+                        label: "Demokratischer Diskurs",
+                        feedback: "💡 <b>Demokratie-Stärkung:</b> Du nutzt soziale Medien für echte Teilhabe und lösungsorientierte Debatten."
+                    },
+                    {
+                        text: "💣 Kommentieren: 'Alles nur Show! Die da oben machen eh was sie wollen!'",
+                        bias: "conspiracy",
+                        label: "Demokratie-Skepsis",
+                        feedback: "💡 <b>Pessimismus-Spirale:</b> Pauschale Verurteilung zerstört den gesellschaftlichen Zusammenhalt und fördert Politikverdrossenheit."
+                    },
+                    {
+                        text: "➡️ Beitrag ignorieren und lieber nach Streit-Themen suchen.",
+                        bias: "propaganda",
+                        label: "Konflikt-Sucher",
+                        feedback: "💡 <b>Drama-Sucht:</b> Der Algorithmus lernt, dass dich friedliche Lösungen nicht interessieren, und liefert dir wieder Krawall-Nachrichten."
+                    }
+                ]
+            }
+        ];
+                    // SIMULATION LOGIC STATE
         let currentStep = 0;
-        let totalSteps = 10;
-        let gameQueue = [];
-        let activeItem = null;
+        let userName = "Alex";
+        let userChoices = [];
 
-        const feedPool = [
-            {
-                id: "post1",
-                author: "@Freiheit_Jetzt_1984_",
-                text: "EILMELDUNG: Die Regierung verbietet ab nächsten Monat komplett den Barbezahlung-Verkehr! Wer noch Bargeld hat, macht sich strafbar!",
-                isFake: true,
-                handle: "@Freiheit_Jetzt_1984_",
-                history: ["EILMELDUNG: Regierung verbietet Barzahlung!", "EILMELDUNG: Regierung verbietet Barzahlung!", "EILMELDUNG: Regierung verbietet Barzahlung!"],
-                comments: [
-                    "Schrecklich!! Wir werden komplett gläsern!!1!",
-                    "Digga, das ist fake, schau mal ins Gesetzgebungsverfahren, da steht absolut gar nichts davon.",
-                    "Wacht auf Leute, bevor es zu spät ist!!"
-                ]
-            },
-            {
-                id: "post2",
-                author: "@Wirtschafts_Fokus_DE",
-                text: "Studie beweist: Jede Lohnerhöhung führt automatisch dazu, dass dein Supermarkt-Einkauf teurer wird. Schuld sind also nicht die Konzerne, sondern die Gewerkschaften!",
-                isFake: true,
-                handle: "@Wirtschafts_Fokus_DE",
-                history: ["Warum Mindestlohn den Wohlstand zerstört", "Interview mit Wirtschafts-Experten", "Jede Lohnerhöhung treibt die Preise hoch..."],
-                comments: [
-                    "Endlich sagt’s mal einer! Die Gewerkschaften rauben uns unser Erspartes.",
-                    "Ähm, nein? Das ist stark verkürzt. Die Inflation hat auch andere globale Ursachen.",
-                    "Komisch, dass die Chef-Gehälter im selben Zeitraum um 50% gestiegen sind..."
-                ]
-            },
-            {
-                id: "post3",
-                author: "@Wirtschafts_Watchdog",
-                text: "Trotz Rekordgewinnen der großen Energiekonzerne im letzten Quartal steigen die Strompreise für Privathaushalte im Januar um weitere 14%.",
-                isFake: false,
-                handle: "@Wirtschafts_Watchdog",
-                history: ["Quartalszahlen Energiekonzerne Q3", "Analyse zu Netzentgelten 2026", "Strompreise im europäischen Vergleich"],
-                comments: [
-                    "Das kann doch nicht wahr sein, wo bleibt die Politik?!",
-                    "Hier ist der Link zur offiziellen Börsenbilanz, das steht so im Quartalsbericht...",
-                    "Wenigstens blickt hier mal jemand durch."
-                ]
-            },
-            {
-                id: "post4",
-                author: "@Klartext_Jan98124",
-                text: "Geheimes Dokument enthüllt: Die Stadtkasse ist komplett leer, nächste Woche werden alle Schwimmbäder und Jugendzentren für immer geschlossen!",
-                isFake: true,
-                handle: "@Klartext_Jan98124",
-                history: ["SCHOCK in der Stadt!", "Jugendzentren vor dem Aus!!", "Geheimes Dokument enthüllt!"],
-                comments: [
-                    "Was?? Nein, da war ich letzten Freitag erst!",
-                    "Fake-Account, gugg dir mal das Profil an, das ist völlig neu.",
-                    "Stimmt, mein Onkel arbeitet bei der Stadt, da ist was dran!"
-                ]
+        // DOM ELEMENTS
+        const screenWelcome = document.getElementById("screen-welcome");
+        const screenFeed = document.getElementById("screen-feed");
+        const screenChat = document.getElementById("screen-chat");
+        const screenResults = document.getElementById("screen-results");
+        
+        const btnStart = document.getElementById("btn-start");
+        const btnRestart = document.getElementById("btn-restart");
+        const usernameInput = document.getElementById("username");
+        
+        const headerStats = document.getElementById("header-stats");
+        const statStep = document.getElementById("stat-step");
+        const statUser = document.getElementById("stat-user");
+        const progressFill = document.getElementById("progress-fill");
+
+        const modalFeedback = document.getElementById("modal-feedback");
+        const modalTitle = document.getElementById("modal-title");
+        const modalBody = document.getElementById("modal-body");
+        const modalBtnNext = document.getElementById("modal-btn-next");
+
+        // EVENT LISTENERS
+        btnStart.addEventListener("click", startSimulation);
+        btnRestart.addEventListener("click", restartSimulation);
+        modalBtnNext.addEventListener("click", advanceStep);
+
+        function startSimulation() {
+            const inputVal = usernameInput.value.trim();
+            if (inputVal !== "") {
+                userName = inputVal;
             }
-        ];
-
-        const familyPool = [
-            {
-                sender: "Mom",
-                avatar: "👩",
-                text: "Hey [NAME], schau mal das Video von @Klartext_Jan98124 an. Da wird gesagt, dass die Krise erfunden ist. Soll ich das in der Familiengruppe teilen? 😳",
-                options: [
-                    { text: "Bitte nicht! Das ist ein Fake-Account, schau dir die Kommentare an.", error: 0, action: "save" },
-                    { text: "Weiß nicht, sieht eigentlich ganz überzeugend aus... Probier's aus.", error: 1, action: "bad" },
-                    { text: "Ignorieren", error: 1, action: "ignore" }
-                ]
-            },
-            {
-                sender: "Opa",
-                avatar: "👴",
-                text: "Hallo [NAME], hier ist ein Link von einer echten Bürger-Initiative: Die da oben wollen uns komplett enteignen! Lies dir das mal durch.",
-                options: [
-                    { text: "Opa, bitte klick nicht auf solche dubiosen Werbeseiten.", error: 0, action: "save" },
-                    { text: "Interessant, schick mir mal mehr davon.", error: 2, action: "bad" },
-                    { text: "Nicht antworten", error: 1, action: "ignore" }
-                ]
-            },
-            {
-                sender: "Schwester",
-                avatar: "👧",
-                text: "Sag mal [NAME], hast du diesen Post über die angeblich geschlossenen Schwimmbäder gesehen? Ich hab grad auf der offiziellen Stadtseite geschaut, das ist kompletter Quatsch.",
-                options: [
-                    { text: "Gut, dass du nachgeschaut hast! Danke dir.", error: 0, action: "save" },
-                    { text: "Wer weiß, vielleicht stimmt es ja doch...", error: 1, action: "bad" },
-                    { text: "Kein Plan, interessiert mich nicht.", error: 1, action: "neutral" }
-                ]
-            },
-            {
-                sender: "Bester Freund",
-                avatar: "🧑",
-                text: "Ey [NAME], schau mal das Meme über die Supermarktpreise. Voll witzig, aber auch irgendwie krass oder? Soll ich das in Insta-Story packen?",
-                options: [
-                    { text: "Lass lieber, das verdreht total die Fakten.", error: 0, action: "save" },
-                    { text: "Ja Mann, mach auf jeden Fall!", error: 1, action: "bad" },
-                    { text: "Mach halt was du willst lol", error: 0, action: "neutral" }
-                ]
-            },
-            {
-                sender: "Dad",
-                avatar: "👨",
-                text: "[NAME], ich hab gelesen, dass die Fabrik hier wegen Umweltauflagen ins Ausland geht. 300 Jobs weg. Ziemlicher Mist für uns.",
-                options: [
-                    { text: "Dad, im Artikel fehlen wichtige Infos, die Fabrik läuft schon lange nicht mehr rentabel.", error: 0, action: "save" },
-                    { text: "Die Politik macht echt alles kaputt!", error: 1, action: "bad" },
-                    { text: "Oh man, echt blöd.", error: 0, action: "neutral" }
-                ]
-            }
-        ];
-                  function startGame() {
-            const nameInput = document.getElementById("username").value.trim();
-            if (nameInput === "") {
-                alert("Bitte gib deinen Namen ein!");
-                return;
-            }
-            playerName = nameInput;
-            document.getElementById("display-name").innerText = playerName;
-
-            document.getElementById("start-screen").classList.add("hidden");
-            document.getElementById("game-screen").classList.remove("hidden");
-
-            buildGameQueue();
-            loadNextStep();
-        }
-
-        function buildGameQueue() {
-            gameQueue = [];
-            for (let i = 0; i < 8; i++) {
-                let type = Math.random() < 0.6 ? "feed" : "family";
-                if (type === "feed") {
-                    let randomPost = feedPool[Math.floor(Math.random() * feedPool.length)];
-                    gameQueue.push({ type: "feed", data: randomPost });
-                } else {
-                    let randomFamily = familyPool[Math.floor(Math.random() * familyPool.length)];
-                    let clonedFamily = { ...randomFamily };
-                    clonedFamily.text = clonedFamily.text.replace("[NAME]", playerName);
-                    gameQueue.push({ type: "family", data: clonedFamily });
-                }
-            }
-            totalSteps = gameQueue.length;
-        }
-
-        function loadNextStep() {
-            if (currentStep >= totalSteps || gameQueue.length === 0) {
-                showEndScreen();
-                return;
-            }
-
-            document.getElementById("event-count").innerText = currentStep + 1;
-            activeItem = gameQueue.shift();
-
-            if (activeItem.type === "feed") {
-                document.getElementById("feed-container").classList.remove("hidden");
-                document.getElementById("chat-modal").classList.add("hidden");
-
-                document.getElementById("post-author").innerText = activeItem.data.author;
-                document.getElementById("post-content").innerText = activeItem.data.text;
-            } else {
-                document.getElementById("feed-container").classList.add("hidden");
-                showChatModal(activeItem.data);
-            }
-        }
-
-        function makeFeedChoice(choice) {
-            let post = activeItem.data;
-
-            if (choice === "report") {
-                if (!post.isFake) {
-                    errorCount += 0.5;
-                }
-            } else if (choice === "share") {
-                if (post.isFake) {
-                    errorCount += 1.5;
-                } else {
-                    errorCount += 0.5;
-                }
-            } else {
-                errorCount += 0.5;
-            }
-
-            currentStep++;
-            loadNextStep();
-        }
-
-        function openProfileCheck() {
-            if (!activeItem || activeItem.type !== "feed") return;
-            let post = activeItem.data;
-
-            document.getElementById("modal-handle").innerText = post.handle;
+            statUser.innerText = userName;
             
-            let historyList = document.getElementById("modal-history");
-            historyList.innerHTML = "";
-            post.history.forEach(h => {
-                let li = document.createElement("li");
-                li.innerText = h;
-                historyList.appendChild(li);
-            });
-
-            let commentsDiv = document.getElementById("modal-comments");
-            commentsDiv.innerHTML = "";
-            post.comments.forEach(c => {
-                let p = document.createElement("p");
-                p.innerText = "💬 " + c;
-                commentsDiv.appendChild(p);
-            });
-
-            document.getElementById("profile-modal").classList.remove("hidden");
+            screenWelcome.classList.remove("active");
+            headerStats.style.display = "flex";
+            
+            currentStep = 0;
+            userChoices = [];
+            
+            renderStep();
         }
 
-        function closeProfileCheck() {
-            document.getElementById("profile-modal").classList.add("hidden");
-        }
-
-        function showChatModal(famData) {
-            document.getElementById("chat-sender-avatar").innerText = famData.avatar;
-            document.getElementById("chat-sender-name").innerText = famData.sender;
-            document.getElementById("chat-message-text").innerText = famData.text;
-
-            let optionsContainer = document.getElementById("chat-options");
-            optionsContainer.innerHTML = "";
-
-            famData.options.forEach((opt) => {
-                let btn = document.createElement("button");
-                btn.className = "btn btn-secondary";
-                btn.innerText = opt.text;
-                btn.onclick = () => handleChatChoice(opt.error);
-                optionsContainer.appendChild(btn);
-            });
-
-            document.getElementById("chat-modal").classList.remove("hidden");
-        }
-
-        function handleChatChoice(errorAdd) {
-            errorCount += errorAdd;
-            document.getElementById("chat-modal").classList.add("hidden");
-            currentStep++;
-            loadNextStep();
-        }
-
-        function showEndScreen() {
-            document.getElementById("game-screen").classList.add("hidden");
-            document.getElementById("end-screen").classList.remove("hidden");
-            document.getElementById("final-errors").innerText = errorCount.toFixed(1);
-
-            let title = "";
-            let text = "";
-            let emoji = "🎉";
-
-            if (errorCount <= 0.5) {
-                title = "Der unerschütterliche Faktenchecker";
-                text = "Besser hätte man es nicht machen können. Du überlegst und prüfst erst alles, bevor du dem Gesagtem Glauben schenkst. Du bist sicher.";
-                emoji = "🎉";
-            } else if (errorCount <= 2) {
-                title = "Gut aufgeklärt";
-                text = "Gut gemacht! Du hast ein paar wenige Fehler gemacht, aber macht nichts. Frag einfach nochmal nach einer zweiten Meinung.";
-                emoji = "😊";
-            } else if (errorCount <= 4) {
-                title = "Gerade noch so die Kurve gekriegt";
-                text = "Gerade noch so die Kurve gekriegt. Das nächste Mal vielleicht einfach weiter scrollen?";
-                emoji = "🤔";
-            } else if (errorCount <= 6.5) {
-                title = "Gefährliches Halbwissen";
-                text = "Du bist im Netz nicht sicher. Bitte informiere dich, bevor du das nächste Mal etwas teilst.";
-                emoji = "😢";
-            } else {
-                title = "Voll in der Falle";
-                text = "Was machst du da? Hast du es überhaupt versucht? Bitte lösch deine Social Media Accounts.";
-                emoji = "😡";
+        function renderStep() {
+            if (currentStep >= simData.length) {
+                showResults();
+                return;
             }
 
-            document.getElementById("end-title").innerText = title;
-            document.getElementById("end-text").innerText = text;
-            document.getElementById("end-emoji").innerText = emoji;
+            // Update Progress
+            const progressPercent = ((currentStep) / simData.length) * 100;
+            progressFill.style.width = progressPercent + "%";
+            statStep.innerText = `${currentStep + 1}/${simData.length}`;
+
+            const data = simData[currentStep];
+
+            if (data.type === "feed") {
+                screenChat.classList.remove("active");
+                screenFeed.classList.add("active");
+
+                document.getElementById("post-avatar").innerText = data.avatar;
+                document.getElementById("post-author").innerText = data.author;
+                document.getElementById("post-tag").innerText = data.tag;
+                document.getElementById("post-content").innerText = data.content;
+
+                const optionsContainer = document.getElementById("options-container");
+                optionsContainer.innerHTML = "";
+
+                data.options.forEach((opt) => {
+                    const btn = document.createElement("button");
+                    btn.className = "option-btn";
+                    btn.innerText = opt.text;
+                    btn.addEventListener("click", () => handleChoice(opt));
+                    optionsContainer.appendChild(btn);
+                });
+
+            } else if (data.type === "chat") {
+                screenFeed.classList.remove("active");
+                screenChat.classList.add("active");
+
+                document.getElementById("chat-sender-name").innerText = data.sender;
+                const chatBox = document.getElementById("chat-box");
+                chatBox.innerHTML = "";
+
+                data.messages.forEach(msg => {
+                    const msgDiv = document.createElement("div");
+                    msgDiv.className = `chat-msg ${msg.type}`;
+                    msgDiv.innerHTML = `<div class="chat-msg-author">${msg.sender}</div>${msg.text}`;
+                    chatBox.appendChild(msgDiv);
+                });
+
+                const chatOptionsContainer = document.getElementById("chat-options-container");
+                chatOptionsContainer.innerHTML = "";
+
+                data.options.forEach((opt) => {
+                    const btn = document.createElement("button");
+                    btn.className = "option-btn";
+                    btn.innerText = opt.text;
+                    btn.addEventListener("click", () => handleChoice(opt));
+                    chatOptionsContainer.appendChild(btn);
+                });
+            }
+        }
+
+        function handleChoice(option) {
+            userChoices.push({
+                step: currentStep,
+                bias: option.bias,
+                label: option.label,
+                text: option.text,
+                feedback: option.feedback
+            });
+
+            // Show Feedback Modal
+            modalTitle.innerHTML = `🔍 Analyse für ${userName}`;
+            modalBody.innerHTML = option.feedback;
+            modalFeedback.classList.add("active");
+        }
+
+        function advanceStep() {
+            modalFeedback.classList.remove("active");
+            currentStep++;
+            renderStep();
+        }
+
+        function showResults() {
+            progressFill.style.width = "100%";
+            screenFeed.classList.remove("active");
+            screenChat.classList.remove("active");
+            screenResults.classList.add("active");
+
+            // Counts
+            let propagandaCount = 0;
+            let neutralCount = 0;
+            let conspiracyCount = 0;
+
+            userChoices.forEach(c => {
+                if (c.bias === "propaganda") propagandaCount++;
+                if (c.bias === "neutral") neutralCount++;
+                if (c.bias === "conspiracy") conspiracyCount++;
+            });
+
+            const summaryElem = document.getElementById("result-summary");
+            let summaryText = `<b>Hallo ${userName}!</b> `;
+
+            if (neutralCount >= 3) {
+                summaryText += "🛡️ <b>Ergebnis: Widerstandsfähig!</b> Du lässt dich nicht so leicht von reißerischen Überschriften oder Verschwörungserzählungen triggern. Du hinterfragst Quellen und schützt deine Filterblase.";
+            } else if (conspiracyCount >= 2) {
+                summaryText += "👁️ <b>Ergebnis: Anfällig für Verschwörungserzählungen!</b> Du neigst dazu, hinter komplexen Ereignissen geheime Mächte oder Manipulationen zu vermuten. Der Algorithmus würde dich schnell in tiefe Kanäle ziehen.";
+            } else {
+                summaryText += "⚡ <b>Ergebnis: Mitten in der Aufmerksamkeitsfalle!</b> Du teilst schnell emotionale Inhalte und fütterst den Algorithmus mit Klicks. Genau das nutzen Propaganda-Akteure aus.";
+            }
+
+            summaryElem.innerHTML = summaryText;
+
+            const resultsList = document.getElementById("results-list");
+            resultsList.innerHTML = "";
+
+            userChoices.forEach((choice, index) => {
+                const item = document.createElement("div");
+                item.className = "result-item";
+
+                let badgeClass = "badge-neutral";
+                if (choice.bias === "propaganda") badgeClass = "badge-propaganda";
+                if (choice.bias === "conspiracy") badgeClass = "badge-conspiracy";
+
+                item.innerHTML = `
+                    <div class="result-title">Szenario ${index + 1}: ${choice.label}</div>
+                    <div class="result-desc">Deine Wahl: "${choice.text}"</div>
+                    <span class="badge ${badgeClass}">${choice.bias.toUpperCase()}</span>
+                `;
+                resultsList.appendChild(item);
+            });
+        }
+
+        function restartSimulation() {
+            screenResults.classList.remove("active");
+            headerStats.style.display = "none";
+            screenWelcome.classList.add("active");
+            progressFill.style.width = "0%";
         }
     </script>
 </body>
