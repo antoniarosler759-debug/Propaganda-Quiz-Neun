@@ -481,7 +481,7 @@
                     <h1 class="welcome-title">Willkommen im Netz</h1>
                     <div class="welcome-desc">
                         Du bist auf Social Media unterwegs und wirst mit 10 verschiedenen Behauptungen konfrontiert – von einfach bis extrem schwer.<br><br>
-                        Zwischendurch schreiben dich <b>Mama</b> (anfällig), <b>Opa</b> (propaganda-gefangen), <b>Dad</b> (meistens sicher), deine <b>Schwester</b> (immun & warnend) oder dein <b>bester Freund</b> (neutral/egal) an!<br><br>
+                        Zwischendurch schreiben dich Mama, Opa, Dad, deine Schwester oder dein bester Freund an!<br><br>
                         ⚠️ <b>Achtung:</b> Wenn du zu oft Falschmeldungen verbreitest, ziehst du dich tiefer in die Filterblase – der Algorithmus schränkt dann deine Möglichkeiten zur Quellenprüfung ein!
                     </div>
                     <div class="input-group">
@@ -721,7 +721,7 @@
             }
         ];
 
-        // DIE 5 CHARAKTERE (MIT EXakter TYP-KENNZEICHNUNG "chat")
+        // DIE 5 CHARAKTERE
         const chatPool = [
             {
                 type: "chat",
@@ -836,18 +836,15 @@
 
         function buildRandomSequence() {
             activeSequence = [];
-            // Mische Feed-Items und Chat-Pool sauber durch
             let shuffledFeed = [...feedItems].sort(() => Math.random() - 0.5);
             let shuffledChat = [...chatPool].sort(() => Math.random() - 0.5);
             
-            // Nimm z.B. 7 Feed-Beiträge und 3 Chats, damit es exakt 10 Runden sind!
             for (let i = 0; i < 7; i++) {
                 if (shuffledFeed.length > 0) activeSequence.push(shuffledFeed.pop());
             }
             for (let i = 0; i < 3; i++) {
                 if (shuffledChat.length > 0) activeSequence.push(shuffledChat.pop());
             }
-            // Nochmal mischen, damit Chats zufällig zwischendurch auftauchen
             activeSequence.sort(() => Math.random() - 0.5);
         }
 
