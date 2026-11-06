@@ -269,7 +269,8 @@
             background-color: rgba(255, 255, 255, 0.08);
             border-color: var(--text-muted);
         }
-                .chat-box {
+        
+        .chat-box {
             background-color: var(--bg);
             border: 1px solid var(--border);
             border-radius: 12px;
@@ -358,6 +359,92 @@
             text-align: center;
             font-weight: 600;
         }
+
+        /* ADS & CRASH OVERLAY STYLES */
+        .ads-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 20;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .ads-overlay.active { display: flex; }
+
+        .ad-popup {
+            position: absolute;
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 12px;
+            width: 220px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+            z-index: 25;
+            font-size: 0.85rem;
+            animation: popIn 0.2s ease;
+        }
+        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .ad-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        .ad-close {
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 2px 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        .ad-body {
+            margin-bottom: 10px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        .ad-accept {
+            width: 100%;
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .crash-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 30;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+        .crash-overlay.active { display: flex; }
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .modal {
             position: absolute;
@@ -456,6 +543,14 @@
 <body>
 
     <div class="sim-container">
+        <!-- ADS & CRASH OVERLAYS -->
+        <div class="ads-overlay" id="ads-overlay"></div>
+        <div class="crash-overlay" id="crash-overlay">
+            <div class="spinner"></div>
+            <h3>Systemfehler! Neustart läuft...</h3>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:5px;">Werbe-Malware hat das System infiziert.</p>
+        </div>
+
         <div class="progress-bar">
             <div class="progress-fill" id="progress-fill"></div>
         </div>
@@ -567,8 +662,8 @@
         </div>
     </div>
         <script>
-        // 10 BEHAUPTUNGEN (VON EINFACH BIS SEHR SCHWER)
-        const feedItems = [
+        // ERWEITERTER BEHAUPTUNGEN-POOL (FÜR ABWECHSLUNG BEI JEDEM START)
+        const feedItemsPool = [
             {
                 id: 1, type: "feed", difficulty: "Einfach",
                 author: "Eil-News_24", avatar: "🔥", tag: "#Eilmeldung",
@@ -718,10 +813,38 @@
                     { text: "📤 Teilen", bias: "neutral", isError: false, label: "Hilfreicher Aufruf geteilt", feedback: "💡 <b>Analyse:</b> Sinnvoller sozialer Aufruf ohne böse Absichten." },
                     { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Tierheim-Post ignoriert", feedback: "💡 <b>Analyse:</b> Kein Problem." }
                 ]
+            },
+            {
+                id: 11, type: "feed", difficulty: "Mittel",
+                author: "Auto-Trends", avatar: "🚗", tag: "#Mobilität",
+                content: "Neue Studie zeigt: Elektroautos verursachen über ihre gesamte Lebensdauer hinweg deutlich weniger Emissionen als Benziner.",
+                accountProfile: "<b>Profil-Check:</b> 'Auto-Trends' • Unabhängiges Mobilitätsmagazin • Seriöse Ökobilanz-Daten.",
+                comments: [
+                    { author: "Lukas", text: "Endlich mal Fakten statt Stammtischgerüchte." },
+                    { author: "Holger", text: "Was ist mit der Batterieproduktion?" }
+                ],
+                options: [
+                    { text: "📤 Teilen", bias: "neutral", isError: false, label: "Sachliche Studie geteilt", feedback: "💡 <b>Analyse:</b> Korrekte und belegte Fakten." },
+                    { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Ignoriert", feedback: "💡 <b>Analyse:</b> Neutral." }
+                ]
+            },
+            {
+                id: 12, type: "feed", difficulty: "Schwer",
+                author: "Netz-Wahrheit", avatar: "🌐", tag: "#Faktencheck",
+                content: "⚠️ Achtung! Die EU plant angeblich die Einführung einer strikten Internet-Ausweispflicht für absolut jede Website ab nächsten Monat!",
+                accountProfile: "<b>Profil-Check:</b> 'Netz-Wahrheit' • Panik-Blog • Keine offiziellen Gesetzesentwürfe verlinkt.",
+                comments: [
+                    { author: "Chris", text: "Das ist das Ende der Anonymität!" },
+                    { author: "Susi", text: "Schon wieder so eine Panikmache-Ente." }
+                ],
+                options: [
+                    { text: "📤 Teilen", bias: "propaganda", isError: true, label: "Panikmache verbreitet", feedback: "💡 <b>Analyse:</b> Typische Panikmache ohne rechtliche Grundlage." },
+                    { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Panik-Post ignoriert", feedback: "💡 <b>Analyse:</b> Sehr gut erkannt!" }
+                ]
             }
         ];
 
-        // DIE 5 CHARAKTERE
+        // DIE 5 CHARAKTERE (OHNE QUELLENPRÜFUNG IM CHAT)
         const chatPool = [
             {
                 type: "chat",
@@ -732,7 +855,6 @@
                 ],
                 options: [
                     { text: "📤 Mamas Vorschlag annehmen & Falschmeldung teilen", bias: "propaganda", isError: true, label: "Auf Mamas Fehlinfo reingefallen", feedback: "💡 <b>Konsequenz:</b> Du hast Mamas ungesicherte Panikmache weiterverbreitet." },
-                    { text: "🔍 Mama erklären, dass das ein Kettenbrief-Fake ist", bias: "neutral", isError: false, label: "Mama vor Fake bewahrt", feedback: "💡 <b>Konsequenz:</b> Klasse! Du hast Mama aufgeklärt und den Fake gestoppt." },
                     { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Mamas Nachricht ignoriert", feedback: "💡 <b>Konsequenz:</b> Unkommentiert gelassen." }
                 ]
             },
@@ -744,8 +866,8 @@
                     { sender: "Opa 👴", text: "Das muss man einfach teilen, damit die Wahrheit ans Licht kommt!", type: "received" }
                 ],
                 options: [
-                    { text: "📤 Opas Propaganda-Behauptung teilen", bias: "conspiracy", isError: true, label: "Opas Verschwörung geteilt", feedback: "💡 <b>Konsequenz:</b> Du hast Opas Propaganda-Erzählung unkritisch übernommen." },
-                    { text: "👁️ Opas Nachricht ignorieren", bias: "neutral", isError: false, label: "Opas Post ignoriert", feedback: "💡 <b>Konsequenz:</b> Richtig entschieden – du hast den Propaganda-Post ignoriert, ohne ihn zu streuen." }
+                    { text: "📤 Teilen", bias: "conspiracy", isError: true, label: "Verschwörung geteilt", feedback: "💡 <b>Konsequenz:</b> Du hast Opas Propaganda-Erzählung unkritisch übernommen." },
+                    { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Post ignoriert", feedback: "💡 <b>Konsequenz:</b> Richtig entschieden – du hast den Propaganda-Post ignoriert." }
                 ]
             },
             {
@@ -757,7 +879,6 @@
                 ],
                 options: [
                     { text: "📤 Dads Einschätzung teilen", bias: "neutral", isError: false, label: "Dads fundierte Ansicht geteilt", feedback: "💡 <b>Konsequenz:</b> Dad lag hier glücklicherweise richtig und seriös." },
-                    { text: "🔍 Nachprüfen (Dad hat sich hier leider täuschen lassen)", bias: "neutral", isError: false, label: "Dads Irrtum korrigiert", feedback: "💡 <b>Konsequenz:</b> Stark! Selbst bei Dad hast du genauer hingesehen und einen kleinen Denkfehler korrigiert." },
                     { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Ignoriert", feedback: "💡 <b>Konsequenz:</b> Neutral geblieben." }
                 ]
             },
@@ -770,7 +891,7 @@
                 ],
                 options: [
                     { text: "📤 Antworten: 'Stimmt voll, pass auch auf dich auf!'", bias: "neutral", isError: false, label: "Medienkompetenz gestärkt", feedback: "💡 <b>Konsequenz:</b> Vorbildlich! Ihr beide passt im Netz aufeinander auf." },
-                    { text: "👁️ Mit Daumen-hoch-Emoji reagieren", bias: "neutral", isError: false, label: "Warnung zur Kenntnis genommen", feedback: "💡 <b>Konsequenz:</b> Die Warnung angenommen." }
+                    { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Warnung ignoriert", feedback: "💡 <b>Konsequenz:</b> Ignoriert." }
                 ]
             },
             {
@@ -786,12 +907,23 @@
                 ]
             }
         ];
+
+        // VERSCHIEDENE BUNTE WERBE-ANGEBOTE
+        const adOffers = [
+            { title: "🔥 GEWINNSPIEL!", text: "Du hast iPhone 16 Pro gewonnen! Jetzt abholen!", color: "#ec4899" },
+            { title: "💰 KRONE LOTTO", text: "Werden Sie in 5 Minuten Millionär im Online-Casino!", color: "#8b5cf6" },
+            { title: "⚡ SCHNELL ABNEHMEN", text: "Geheimes Wundermittel verbrennt Fett im Schlaf!", color: "#10b981" },
+            { title: "🚨 VIREN GEFUNDEN!", text: "Ihr Smartphone ist extrem langsam! Jetzt bereinigen!", color: "#ef4444" },
+            { title: "🎁 GRATIS GUTSCHEIN", text: "500€ Amazon-Gutschein für die ersten 10 Nutzer!", color: "#f59e0b" },
+            { title: "🚀 Krypto-Booster", text: "Verdreifache dein Geld mit dieser neuen Meme-Coin!", color: "#0284c7" }
+        ];
                     // SPIEL-ZUSTAND
         let activeSequence = [];
         let currentStep = 0;
         let errorCount = 0;
         let userName = "Alex";
         let userChoices = [];
+        let hasVirus = false; // Virus-Status durch Werbe-Klick
 
         const screenWelcome = document.getElementById("screen-welcome");
         const screenFeed = document.getElementById("screen-feed");
@@ -812,6 +944,9 @@
         const modalBody = document.getElementById("modal-body");
         const modalBtnNext = document.getElementById("modal-btn-next");
 
+        const adsOverlay = document.getElementById("ads-overlay");
+        const crashOverlay = document.getElementById("crash-overlay");
+
         btnStart.addEventListener("click", startSimulation);
         btnRestart.addEventListener("click", restartSimulation);
         modalBtnNext.addEventListener("click", advanceStep);
@@ -829,14 +964,16 @@
             currentStep = 0;
             errorCount = 0;
             userChoices = [];
+            hasVirus = false;
             
             buildRandomSequence();
-            renderStep();
+            triggerAdsChaos(() => renderStep());
         }
 
         function buildRandomSequence() {
             activeSequence = [];
-            let shuffledFeed = [...feedItems].sort(() => Math.random() - 0.5);
+            // Jedes Mal zufällig aus dem Pool von 12 Beiträgen 7 auswählen und mischen
+            let shuffledFeed = [...feedItemsPool].sort(() => Math.random() - 0.5);
             let shuffledChat = [...chatPool].sort(() => Math.random() - 0.5);
             
             for (let i = 0; i < 7; i++) {
@@ -845,7 +982,74 @@
             for (let i = 0; i < 3; i++) {
                 if (shuffledChat.length > 0) activeSequence.push(shuffledChat.pop());
             }
+            // Gesamte Sequenz (Feeds + Chats) komplett zufällig anordnen
             activeSequence.sort(() => Math.random() - 0.5);
+        }
+
+        // WERBE-CHAOS SYSTEM
+        function triggerAdsChaos(callback) {
+            adsOverlay.innerHTML = "";
+            adsOverlay.classList.add("active");
+
+            // Erzeuge 6 Pop-ups gestaffelt
+            let totalAds = 6;
+            let closedCount = 0;
+
+            for (let i = 0; i < totalAds; i++) {
+                setTimeout(() => {
+                    if (!adsOverlay.classList.contains("active")) return;
+                    
+                    const adData = adOffers[Math.floor(Math.random() * adOffers.length)];
+                    const popup = document.createElement("div");
+                    popup.className = "post-card ad-popup";
+                    popup.style.borderColor = adData.color;
+                    
+                    // Zufällige Position auf dem Bildschirm
+                    const randomX = Math.random() * 250;
+                    const randomY = Math.random() * 250;
+                    popup.style.left = `${randomX}px`;
+                    popup.style.top = `${randomY}px`;
+
+                    popup.innerHTML = `
+                        <div class="ad-header" style="color: ${adData.color}">
+                            <span>${adData.title}</span>
+                            <button class="ad-close">✖</button>
+                        </div>
+                        <div class="ad-body">${adData.text}</div>
+                        <button class="ad-accept">Akzeptieren 🚀</button>
+                    `;
+
+                    // Schließen-Button
+                    popup.querySelector(".ad-close").addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        popup.remove();
+                        closedCount++;
+                        if (closedCount >= totalAds) {
+                            adsOverlay.classList.remove("active");
+                            callback();
+                        }
+                    });
+
+                    // Akzeptieren-Button löst Virus-Absturz aus!
+                    popup.querySelector(".ad-accept").addEventListener("click", () => {
+                        adsOverlay.classList.remove("active");
+                        triggerSystemCrash(() => {
+                            hasVirus = true;
+                            callback();
+                        });
+                    });
+
+                    adsOverlay.appendChild(popup);
+                }, i * 250);
+            }
+        }
+
+        function triggerSystemCrash(onRecover) {
+            crashOverlay.classList.add("active");
+            setTimeout(() => {
+                crashOverlay.classList.remove("active");
+                onRecover();
+            }, 2500); // 2.5 Sekunden Lade-Symbol für Neustart
         }
 
         function renderStep() {
@@ -912,8 +1116,30 @@
 
             const btnCheck = document.createElement("button");
             btnCheck.className = "option-btn";
-            btnCheck.innerText = "🔍 Überprüfen (Account & Kommentare ansehen)";
-            btnCheck.addEventListener("click", () => showInspectionView(data));
+            
+            // Wenn Filterblase gesperrt ODER durch Virus blockiert
+            if (errorCount >= 3) {
+                btnCheck.innerText = "🔍 Überprüfen (Gesperrt durch Filterblase)";
+                btnCheck.style.opacity = "0.5";
+                btnCheck.addEventListener("click", () => {
+                    document.getElementById("extra-inspection-area").innerHTML = `
+                        <div class="blocked-warning">❌ Du bist in der Filterblase gefangen!</div>
+                    `;
+                });
+            } else if (hasVirus) {
+                btnCheck.innerText = "🔍 Durch Virus nicht möglich";
+                btnCheck.style.borderColor = "var(--danger)";
+                btnCheck.style.color = "var(--danger)";
+                btnCheck.addEventListener("click", () => {
+                    errorCount++;
+                    document.getElementById("extra-inspection-area").innerHTML = `
+                        <div class="blocked-warning">⚠️ MALWARE AKTIVIERT! Der Virus hat deine Daten korrumpiert (+1 Fehlerauswertung).</div>
+                    `;
+                });
+            } else {
+                btnCheck.innerText = "🔍 Überprüfen (Account & Kommentare ansehen)";
+                btnCheck.addEventListener("click", () => showInspectionView(data));
+            }
             optionsContainer.appendChild(btnCheck);
 
             const btnIgnore = document.createElement("button");
@@ -925,18 +1151,6 @@
 
         function showInspectionView(data) {
             const extraArea = document.getElementById("extra-inspection-area");
-            
-            if (errorCount >= 3) {
-                extraArea.innerHTML = `
-                    <div class="blocked-warning">
-                        ❌ Ach Nee, das passt schon...<br>
-                        <span style="font-size:0.8rem; font-weight:normal; color:#cbd5e1;">
-                            (Du bist bereits zu tief in der Filterblase gefangen. Der Algorithmus verwehrt dir den neutralen Blick auf die Quellen!)
-                        </span>
-                    </div>
-                `;
-                return;
-            }
 
             let commentsHTML = "";
             data.comments.forEach(c => {
@@ -1004,7 +1218,13 @@
         function advanceStep() {
             modalFeedback.classList.remove("active");
             currentStep++;
-            renderStep();
+            
+            // Vor jeder neuen Runde mit einer Wahrscheinlichkeit das Werbe-Chaos triggern
+            if (Math.random() < 0.4 && currentStep < activeSequence.length) {
+                triggerAdsChaos(() => renderStep());
+            } else {
+                renderStep();
+            }
         }
 
         function showResults() {
@@ -1012,11 +1232,6 @@
             screenFeed.classList.remove("active");
             screenChat.classList.remove("active");
             screenResults.classList.add("active");
-
-            let neutralCount = 0;
-            userChoices.forEach(c => {
-                if (c.bias === "neutral") neutralCount++;
-            });
 
             const summaryElem = document.getElementById("result-summary");
             let summaryText = `<b>Hallo ${userName}!</b> `;
@@ -1026,7 +1241,11 @@
             } else if (errorCount < 3) {
                 summaryText += "⚖️ <b>Ergebnis: Gut geschult!</b> Du hast ein paar Fehler gemacht, konntest dich aber noch aus dem Algorithmus befreien.";
             } else {
-                summaryText += "⚡ <b>Ergebnis: Gefangen in der Echokammer!</b> Du hast 3 oder mehr Fehler gemacht. Der Algorithmus hat dir den Zugang zur Faktenprüfung verwehrt, wodurch du kaum noch eine Chance hattest zu entkommen.";
+                summaryText += "⚡ <b>Ergebnis: Gefangen in der Echokammer!</b> Du hast 3 oder mehr Fehler gemacht. Der Algorithmus hat dir den Zugang zur Faktenprüfung verwehrt.";
+            }
+
+            if (hasVirus) {
+                summaryText += "<br><span style='color:var(--danger);'>⚠️ Du hattest dir zudem einen System-Virus eingefangen!</span>";
             }
 
             summaryElem.innerHTML = summaryText;
@@ -1057,6 +1276,7 @@
             screenWelcome.classList.add("active");
             progressFill.style.width = "0%";
             errorCount = 0;
+            hasVirus = false;
         }
     </script>
 </body>
