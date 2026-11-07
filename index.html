@@ -40,7 +40,7 @@
 
         .sim-container {
             width: 100%;
-            max-width: 600px;
+            max-width: 90%;
             background-color: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 16px;
@@ -269,279 +269,9 @@
             background-color: rgba(255, 255, 255, 0.08);
             border-color: var(--text-muted);
         }
-        
-        .chat-box {
-            background-color: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px;
-            height: 220px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .chat-msg {
-            max-width: 80%;
-            padding: 10px 14px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        .chat-msg.received {
-            background-color: #334155;
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
-        }
-
-        .chat-msg.sent {
-            background-color: var(--primary);
-            align-self: flex-end;
-            border-bottom-right-radius: 2px;
-        }
-
-        .chat-msg-author {
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 4px;
-        }
-
-        .comments-section {
-            margin-top: 15px;
-            border-top: 1px solid var(--border);
-            padding-top: 12px;
-        }
-
-        .comments-title {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .comment-item {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 8px 12px;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
-        }
-
-        .comment-author {
-            font-weight: 600;
-            color: var(--primary);
-            font-size: 0.8rem;
-            margin-bottom: 2px;
-        }
-
-        .account-profile-box {
-            background: rgba(59, 130, 246, 0.05);
-            border: 1px solid var(--primary);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        .blocked-warning {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid var(--danger);
-            color: #fca5a5;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            margin-bottom: 12px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        /* ADS & CRASH OVERLAY STYLES */
-        .ads-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 20;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-        .ads-overlay.active { display: flex; }
-
-        .ad-popup {
-            position: absolute;
-            background: var(--card-bg);
-            border: 2px solid var(--primary);
-            border-radius: 10px;
-            padding: 12px;
-            width: 220px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
-            z-index: 25;
-            font-size: 0.85rem;
-            animation: popIn 0.2s ease;
-        }
-        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        .ad-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #fff;
-        }
-        .ad-close {
-            background: var(--danger);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 2px 6px;
-            cursor: pointer;
-            font-size: 0.75rem;
-        }
-        .ad-body {
-            margin-bottom: 10px;
-            color: var(--text-muted);
-            text-align: center;
-        }
-        .ad-accept {
-            width: 100%;
-            background: var(--success);
-            color: white;
-            border: none;
-            padding: 6px;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        .crash-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #000;
-            z-index: 30;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-            text-align: center;
-            padding: 20px;
-        }
-        .crash-overlay.active { display: flex; }
-        .spinner {
-            border: 4px solid rgba(255,255,255,0.3);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border-top-color: var(--primary);
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .modal {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(15, 23, 42, 0.9);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            z-index: 10;
-            backdrop-filter: blur(4px);
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
-
-        .modal-title {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .modal-body {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-            margin-bottom: 16px;
-        }
-
-        .result-item {
-            background-color: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
-        }
-
-        .result-title {
-            font-weight: 600;
-            margin-bottom: 4px;
-            font-size: 0.95rem;
-        }
-
-        .result-desc {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            line-height: 1.4;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-top: 6px;
-        }
-
-        .badge-propaganda { background-color: rgba(220, 38, 38, 0.2); color: #f87171; border: 1px solid var(--propaganda-red); }
-        .badge-neutral { background-color: rgba(2, 132, 199, 0.2); color: #38bdf8; border: 1px solid var(--neutral-blue); }
-        .badge-conspiracy { background-color: rgba(124, 58, 237, 0.2); color: #c084fc; border: 1px solid var(--conspiracy-purple); }
-
-        .progress-bar {
-            height: 6px;
-            width: 100%;
-            background-color: var(--border);
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background-color: var(--primary);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
     </style>
 </head>
 <body>
-
     <div class="sim-container">
         <!-- ADS & CRASH OVERLAYS -->
         <div class="ads-overlay" id="ads-overlay"></div>
@@ -661,8 +391,271 @@
             </div>
         </div>
     </div>
+
+    <style>
+        .chat-box {
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            height: 220px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .chat-msg {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .chat-msg.received {
+            background-color: #334155;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .chat-msg.sent {
+            background-color: var(--primary);
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-msg-author {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 4px;
+        }
+
+        .comments-section {
+            margin-top: 15px;
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
+        }
+
+        .comments-title {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .comment-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.8rem;
+            margin-bottom: 2px;
+        }
+
+        .account-profile-box {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .blocked-warning {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--danger);
+            color: #fca5a5;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .ads-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 20;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .ads-overlay.active { display: flex; }
+
+        .ad-popup {
+            position: absolute;
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 12px;
+            width: 280px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+            z-index: 25;
+            font-size: 0.85rem;
+            animation: popIn 0.2s ease;
+        }
+        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .ad-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        .ad-close {
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 2px 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        .ad-body {
+            margin-bottom: 10px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        .ad-accept {
+            width: 100%;
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .crash-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 30;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+        .crash-overlay.active { display: flex; }
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .modal {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+        }
+        .modal.active { display: flex; }
+
+        .modal-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-body {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .result-item {
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .result-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 0.95rem;
+        }
+
+        .result-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        .badge-propaganda { background-color: rgba(220, 38, 38, 0.2); color: #f87171; border: 1px solid var(--propaganda-red); }
+        .badge-neutral { background-color: rgba(2, 132, 199, 0.2); color: #38bdf8; border: 1px solid var(--neutral-blue); }
+        .badge-conspiracy { background-color: rgba(124, 58, 237, 0.2); color: #c084fc; border: 1px solid var(--conspiracy-purple); }
+
+        .progress-bar {
+            height: 6px;
+            width: 100%;
+            background-color: var(--border);
+            position: absolute;
+            top: 0; left: 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
         <script>
-        // ERWEITERTER BEHAUPTUNGEN-POOL (FÜR ABWECHSLUNG BEI JEDEM START)
+        // GROSSER POOL VON BEHAUPTUNGEN FÜR JEDE MENGE ABWECHSLUNG
         const feedItemsPool = [
             {
                 id: 1, type: "feed", difficulty: "Einfach",
@@ -844,7 +837,7 @@
             }
         ];
 
-        // DIE 5 CHARAKTERE (OHNE QUELLENPRÜFUNG IM CHAT)
+        // CHARAKTERE OHNE QUELLENPRÜFUNG
         const chatPool = [
             {
                 type: "chat",
@@ -908,7 +901,7 @@
             }
         ];
 
-        // VERSCHIEDENE BUNTE WERBE-ANGEBOTE
+        // BUNTE WERBE-ANGEBOTE
         const adOffers = [
             { title: "🔥 GEWINNSPIEL!", text: "Du hast iPhone 16 Pro gewonnen! Jetzt abholen!", color: "#ec4899" },
             { title: "💰 KRONE LOTTO", text: "Werden Sie in 5 Minuten Millionär im Online-Casino!", color: "#8b5cf6" },
@@ -917,13 +910,14 @@
             { title: "🎁 GRATIS GUTSCHEIN", text: "500€ Amazon-Gutschein für die ersten 10 Nutzer!", color: "#f59e0b" },
             { title: "🚀 Krypto-Booster", text: "Verdreifache dein Geld mit dieser neuen Meme-Coin!", color: "#0284c7" }
         ];
-                    // SPIEL-ZUSTAND
+        </script>
+            <script>
         let activeSequence = [];
         let currentStep = 0;
         let errorCount = 0;
         let userName = "Alex";
         let userChoices = [];
-        let hasVirus = false; // Virus-Status durch Werbe-Klick
+        let hasVirus = false;
 
         const screenWelcome = document.getElementById("screen-welcome");
         const screenFeed = document.getElementById("screen-feed");
@@ -972,7 +966,6 @@
 
         function buildRandomSequence() {
             activeSequence = [];
-            // Jedes Mal zufällig aus dem Pool von 12 Beiträgen 7 auswählen und mischen
             let shuffledFeed = [...feedItemsPool].sort(() => Math.random() - 0.5);
             let shuffledChat = [...chatPool].sort(() => Math.random() - 0.5);
             
@@ -982,7 +975,6 @@
             for (let i = 0; i < 3; i++) {
                 if (shuffledChat.length > 0) activeSequence.push(shuffledChat.pop());
             }
-            // Gesamte Sequenz (Feeds + Chats) komplett zufällig anordnen
             activeSequence.sort(() => Math.random() - 0.5);
         }
 
@@ -991,7 +983,6 @@
             adsOverlay.innerHTML = "";
             adsOverlay.classList.add("active");
 
-            // Erzeuge 6 Pop-ups gestaffelt
             let totalAds = 6;
             let closedCount = 0;
 
@@ -1004,11 +995,10 @@
                     popup.className = "post-card ad-popup";
                     popup.style.borderColor = adData.color;
                     
-                    // Zufällige Position auf dem Bildschirm
-                    const randomX = Math.random() * 250;
-                    const randomY = Math.random() * 250;
-                    popup.style.left = `${randomX}px`;
-                    popup.style.top = `${randomY}px`;
+                    const randomX = Math.random() * (window.innerWidth - 320);
+                    const randomY = Math.random() * (window.innerHeight - 250);
+                    popup.style.left = `${Math.max(10, randomX)}px`;
+                    popup.style.top = `${Math.max(10, randomY)}px`;
 
                     popup.innerHTML = `
                         <div class="ad-header" style="color: ${adData.color}">
@@ -1019,7 +1009,6 @@
                         <button class="ad-accept">Akzeptieren 🚀</button>
                     `;
 
-                    // Schließen-Button
                     popup.querySelector(".ad-close").addEventListener("click", (e) => {
                         e.stopPropagation();
                         popup.remove();
@@ -1030,7 +1019,6 @@
                         }
                     });
 
-                    // Akzeptieren-Button löst Virus-Absturz aus!
                     popup.querySelector(".ad-accept").addEventListener("click", () => {
                         adsOverlay.classList.remove("active");
                         triggerSystemCrash(() => {
@@ -1040,7 +1028,7 @@
                     });
 
                     adsOverlay.appendChild(popup);
-                }, i * 250);
+                }, i * 200);
             }
         }
 
@@ -1049,7 +1037,7 @@
             setTimeout(() => {
                 crashOverlay.classList.remove("active");
                 onRecover();
-            }, 2500); // 2.5 Sekunden Lade-Symbol für Neustart
+            }, 2500);
         }
 
         function renderStep() {
@@ -1117,7 +1105,6 @@
             const btnCheck = document.createElement("button");
             btnCheck.className = "option-btn";
             
-            // Wenn Filterblase gesperrt ODER durch Virus blockiert
             if (errorCount >= 3) {
                 btnCheck.innerText = "🔍 Überprüfen (Gesperrt durch Filterblase)";
                 btnCheck.style.opacity = "0.5";
@@ -1219,7 +1206,6 @@
             modalFeedback.classList.remove("active");
             currentStep++;
             
-            // Vor jeder neuen Runde mit einer Wahrscheinlichkeit das Werbe-Chaos triggern
             if (Math.random() < 0.4 && currentStep < activeSequence.length) {
                 triggerAdsChaos(() => renderStep());
             } else {
