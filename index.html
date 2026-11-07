@@ -40,7 +40,7 @@
 
         .sim-container {
             width: 100%;
-            max-width: 90%;
+            max-width: 600px;
             background-color: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 16px;
@@ -58,8 +58,7 @@
             align-items: center;
             backdrop-filter: blur(8px);
         }
-
-        .header-title {
+                .header-title {
             font-weight: 700;
             font-size: 1.1rem;
             color: var(--primary);
@@ -175,16 +174,6 @@
             transform: scale(0.99);
         }
 
-        .btn-secondary {
-            background-color: var(--border);
-            color: var(--text);
-            margin-top: 10px;
-        }
-
-        .btn-secondary:hover {
-            background-color: #475569;
-        }
-
         .post-card {
             background-color: var(--bg);
             border: 1px solid var(--border);
@@ -269,130 +258,7 @@
             background-color: rgba(255, 255, 255, 0.08);
             border-color: var(--text-muted);
         }
-    </style>
-</head>
-<body>
-    <div class="sim-container">
-        <!-- ADS & CRASH OVERLAYS -->
-        <div class="ads-overlay" id="ads-overlay"></div>
-        <div class="crash-overlay" id="crash-overlay">
-            <div class="spinner"></div>
-            <h3>Systemfehler! Neustart läuft...</h3>
-            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:5px;">Werbe-Malware hat das System infiziert.</p>
-        </div>
 
-        <div class="progress-bar">
-            <div class="progress-fill" id="progress-fill"></div>
-        </div>
-
-        <div class="header">
-            <div class="header-title">
-                🤖 Algorithmus Sim
-            </div>
-            <div class="header-stats" id="header-stats" style="display: none;">
-                <div class="stat-item" title="Runde">
-                    📊 <span id="stat-step">1/10</span>
-                </div>
-                <div class="stat-item" title="Nutzer">
-                    👤 <span id="stat-user">Gast</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="content-body">
-            <!-- START SCREEN -->
-            <div class="screen active" id="screen-welcome">
-                <div class="welcome-screen">
-                    <h1 class="welcome-title">Willkommen im Netz</h1>
-                    <div class="welcome-desc">
-                        Du bist auf Social Media unterwegs und wirst mit 10 verschiedenen Behauptungen konfrontiert – von einfach bis extrem schwer.<br><br>
-                        Zwischendurch schreiben dich Mama, Opa, Dad, deine Schwester oder dein bester Freund an!<br><br>
-                        ⚠️ <b>Achtung:</b> Wenn du zu oft Falschmeldungen verbreitest, ziehst du dich tiefer in die Filterblase – der Algorithmus schränkt dann deine Möglichkeiten zur Quellenprüfung ein!
-                    </div>
-                    <div class="input-group">
-                        <label for="username">Dein Vorname oder Nutzername:</label>
-                        <input type="text" id="username" placeholder="z. B. Alex" value="Alex">
-                    </div>
-                    <button class="btn" id="btn-start">
-                        Simulation Starten 🚀
-                    </button>
-                </div>
-            </div>
-
-            <!-- FEED SCREEN -->
-            <div class="screen" id="screen-feed">
-                <div class="post-card" id="post-card-container">
-                    <div class="post-header">
-                        <div class="avatar" id="post-avatar">📢</div>
-                        <div class="author-info">
-                            <div class="author-name" id="post-author">Kanal-Name</div>
-                            <div class="post-time" id="post-time">Gerade eben • 🌐</div>
-                        </div>
-                    </div>
-                    <span class="post-tag" id="post-tag">#Eilmeldung</span>
-                    <div class="post-content" id="post-content">
-                        Beitragstext wird geladen...
-                    </div>
-                    
-                    <div id="extra-inspection-area">
-                        <!-- Account & Kommentare -->
-                    </div>
-                </div>
-
-                <div class="options-container" id="options-container">
-                    <!-- Dynamic Buttons -->
-                </div>
-            </div>
-
-            <!-- CHAT SCREEN -->
-            <div class="screen" id="screen-chat">
-                <div style="margin-bottom: 12px; font-weight: 600; font-size: 0.9rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
-                    💬 Nachricht von <span id="chat-sender-name" style="color: var(--text);">Person</span>
-                </div>
-                
-                <div class="chat-box" id="chat-box">
-                    <!-- Chat Messages -->
-                </div>
-
-                <div class="options-container" id="chat-options-container">
-                    <!-- Chat Buttons -->
-                </div>
-            </div>
-
-            <!-- RESULT SCREEN -->
-            <div class="screen" id="screen-results">
-                <h2 style="margin-bottom: 12px; font-size: 1.4rem; text-align: center;">Auswertung deiner Filterblase 🎯</h2>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; text-align: center;" id="result-summary">
-                    Hier ist die Analyse deines Verhaltens im Algorithmus:
-                </p>
-
-                <div id="results-list" style="max-height: 250px; overflow-y: auto;">
-                    <!-- Results -->
-                </div>
-
-                <button class="btn" id="btn-restart" style="margin-top: 10px;">
-                    Simulation Neustarten 🔄
-                </button>
-            </div>
-        </div>
-
-        <!-- MODAL FOR FEEDBACK -->
-        <div class="modal" id="modal-feedback">
-            <div class="modal-card">
-                <div class="modal-title" id="modal-title">
-                    🔍 Algorithmus-Analyse
-                </div>
-                <div class="modal-body" id="modal-body">
-                    Feedback-Text hier...
-                </div>
-                <button class="btn" id="modal-btn-next">
-                    Weiter ➡️
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <style>
         .chat-box {
             background-color: var(--bg);
             border: 1px solid var(--border);
@@ -483,94 +349,12 @@
             font-weight: 600;
         }
 
-        .ads-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 20;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-        .ads-overlay.active { display: flex; }
-
-        .ad-popup {
-            position: absolute;
-            background: var(--card-bg);
-            border: 2px solid var(--primary);
-            border-radius: 10px;
-            padding: 12px;
-            width: 280px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
-            z-index: 25;
-            font-size: 0.85rem;
-            animation: popIn 0.2s ease;
-        }
-        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        .ad-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #fff;
-        }
-        .ad-close {
-            background: var(--danger);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 2px 6px;
-            cursor: pointer;
-            font-size: 0.75rem;
-        }
-        .ad-body {
-            margin-bottom: 10px;
-            color: var(--text-muted);
-            text-align: center;
-        }
-        .ad-accept {
-            width: 100%;
-            background: var(--success);
-            color: white;
-            border: none;
-            padding: 6px;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        .crash-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #000;
-            z-index: 30;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-            text-align: center;
-            padding: 20px;
-        }
-        .crash-overlay.active { display: flex; }
-        .spinner {
-            border: 4px solid rgba(255,255,255,0.3);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border-top-color: var(--primary);
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
         .modal {
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background-color: rgba(15, 23, 42, 0.9);
             display: none;
             justify-content: center;
@@ -579,7 +363,10 @@
             z-index: 10;
             backdrop-filter: blur(4px);
         }
-        .modal.active { display: flex; }
+
+        .modal.active {
+            display: flex;
+        }
 
         .modal-card {
             background-color: var(--card-bg);
@@ -644,7 +431,8 @@
             width: 100%;
             background-color: var(--border);
             position: absolute;
-            top: 0; left: 0;
+            top: 0;
+            left: 0;
         }
 
         .progress-fill {
@@ -654,8 +442,122 @@
             transition: width 0.3s ease;
         }
     </style>
-        <script>
-        // GROSSER POOL VON BEHAUPTUNGEN FÜR JEDE MENGE ABWECHSLUNG
+</head>
+<body>
+
+    <div class="sim-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+
+        <div class="header">
+            <div class="header-title">
+                🤖 Algorithmus Sim
+            </div>
+            <div class="header-stats" id="header-stats" style="display: none;">
+                <div class="stat-item" title="Runde">
+                    📊 <span id="stat-step">1/10</span>
+                </div>
+                <div class="stat-item" title="Nutzer">
+                    👤 <span id="stat-user">Gast</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-body">
+            <!-- START SCREEN -->
+            <div class="screen active" id="screen-welcome">
+                <div class="welcome-screen">
+                    <h1 class="welcome-title">Willkommen im Netz</h1>
+                    <div class="welcome-desc">
+                        Du bist auf Social Media unterwegs und wirst mit verschiedenen Situationen konfrontiert: Entweder postet ein Kanal eine Behauptung oder Familie und Freunde schreiben dir im Chat!<br><br>
+                        Triff deine Wahl und passe auf, worauf du reinfällst.<br><br>
+                        ⚠️ <b>Achtung Filterblase:</b> Wenn du zu oft Falschmeldungen teilst, schränkt der Algorithmus deine Möglichkeiten ein!
+                    </div>
+                    <div class="input-group">
+                        <label for="username">Dein Vorname oder Nutzername:</label>
+                        <input type="text" id="username" placeholder="z. B. Alex" value="Alex">
+                    </div>
+                    <button class="btn" id="btn-start">
+                        Simulation Starten 🚀
+                    </button>
+                </div>
+            </div>
+
+            <!-- FEED SCREEN -->
+            <div class="screen" id="screen-feed">
+                <div class="post-card" id="post-card-container">
+                    <div class="post-header">
+                        <div class="avatar" id="post-avatar">📢</div>
+                        <div class="author-info">
+                            <div class="author-name" id="post-author">Kanal-Name</div>
+                            <div class="post-time" id="post-time">Gerade eben • 🌐</div>
+                        </div>
+                    </div>
+                    <span class="post-tag" id="post-tag">#Eilmeldung</span>
+                    <div class="post-content" id="post-content">
+                        Beitragstext wird geladen...
+                    </div>
+                    
+                    <div id="extra-inspection-area">
+                        <!-- Account & Kommentare -->
+                    </div>
+                </div>
+
+                <div class="options-container" id="options-container">
+                    <!-- Dynamic Buttons -->
+                </div>
+            </div>
+
+            <!-- CHAT SCREEN -->
+            <div class="screen" id="screen-chat">
+                <div style="margin-bottom: 12px; font-weight: 600; font-size: 0.9rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+                    💬 Nachricht von <span id="chat-sender-name" style="color: var(--text);">Person</span>
+                </div>
+                
+                <div class="chat-box" id="chat-box">
+                    <!-- Chat Messages -->
+                </div>
+
+                <div class="options-container" id="chat-options-container">
+                    <!-- Chat Buttons -->
+                </div>
+            </div>
+
+            <!-- RESULT SCREEN -->
+            <div class="screen" id="screen-results">
+                <h2 style="margin-bottom: 12px; font-size: 1.4rem; text-align: center;">Auswertung deiner Filterblase 🎯</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; text-align: center;" id="result-summary">
+                    Hier ist die Analyse deines Verhaltens im Algorithmus:
+                </p>
+
+                <div id="results-list" style="max-height: 250px; overflow-y: auto;">
+                    <!-- Results -->
+                </div>
+
+                <button class="btn" id="btn-restart" style="margin-top: 10px;">
+                    Simulation Neustarten 🔄
+                </button>
+            </div>
+        </div>
+
+        <!-- MODAL FOR FEEDBACK -->
+        <div class="modal" id="modal-feedback">
+            <div class="modal-card">
+                <div class="modal-title" id="modal-title">
+                    🔍 Algorithmus-Analyse
+                </div>
+                <div class="modal-body" id="modal-body">
+                    Feedback-Text hier...
+                </div>
+                <button class="btn" id="modal-btn-next">
+                    Weiter ➡️
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
         const feedItemsPool = [
             {
                 id: 1, type: "feed", difficulty: "Einfach",
@@ -669,6 +571,7 @@
                 ],
                 options: [
                     { text: "📤 Teilen", bias: "propaganda", isError: true, label: "Auf plumpen Fake reingefallen", feedback: "💡 <b>Analyse:</b> Plumper Fake mit Panikmache. Wer hier teilt, fällt auf billige Tricks rein." },
+                    { text: "🔍 Überprüfen", bias: "neutral", isError: false, label: "Fake erfolgreich überprüft", feedback: "💡 <b>Analyse:</b> Sehr gut! Ein Blick auf das Profil (neu, anonym) entlarvt die Panikmache sofort." },
                     { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Platten Fake ignoriert", feedback: "💡 <b>Analyse:</b> Richtig erkannt und weggedrückt." }
                 ]
             },
@@ -684,6 +587,7 @@
                 ],
                 options: [
                     { text: "📤 Teilen", bias: "neutral", isError: false, label: "Harmlose Info geteilt", feedback: "💡 <b>Analyse:</b> Völlig harmloser und wahrer Beitrag." },
+                    { text: "🔍 Überprüfen", bias: "neutral", isError: false, label: "Wetter verifiziert", feedback: "💡 <b>Analyse:</b> Quelle geprüft: Absolut seriös." },
                     { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Wetter ignoriert", feedback: "💡 <b>Analyse:</b> Auch okay, kein Schaden." }
                 ]
             },
@@ -699,6 +603,7 @@
                 ],
                 options: [
                     { text: "📤 Teilen", bias: "propaganda", isError: true, label: "Halbwahrheit verbreitet", feedback: "💡 <b>Analyse:</b> Klassische Halbwahrheit. Wer das ungeprüft teilt, streut medizinische Mythen." },
+                    { text: "🔍 Überprüfen", bias: "neutral", isError: false, label: "Gesundheits-Mythos geprüft", feedback: "💡 <b>Analyse:</b> Stark! Der Account verkauft Produkte – reines Marketing." },
                     { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Gesundheits-Mythos ignoriert", feedback: "💡 <b>Analyse:</b> Gut ignoriert, da wissenschaftlich unbelegt." }
                 ]
             },
@@ -714,6 +619,7 @@
                 ],
                 options: [
                     { text: "📤 Teilen", bias: "neutral", isError: false, label: "Wahre Statistik geteilt", feedback: "💡 <b>Analyse:</b> Fundierte und korrekte Wirtschaftsdaten." },
+                    { text: "🔍 Überprüfen", bias: "neutral", isError: false, label: "Statistik verifiziert", feedback: "💡 <b>Analyse:</b> Quelle geprüft: Absolut seriös." },
                     { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Statistik ignoriert", feedback: "💡 <b>Analyse:</b> Neutral geblieben." }
                 ]
             },
@@ -729,6 +635,7 @@
                 ],
                 options: [
                     { text: "📤 Teilen", bias: "propaganda", isError: true, label: "Auf selektive Statistik reingefallen", feedback: "💡 <b>Analyse:</b> Profi-Propaganda-Trick (Cherry Picking)! Echte Zahlen werden aus dem Kontext gerissen." },
+                    { text: "🔍 Überprüfen", bias: "neutral", isError: false, label: "Kontext-Manipulation entlarvt", feedback: "💡 <b>Analyse:</b> Exzellent! Du hast gemerkt, dass echte Zahlen falsch interpretiert wurden." },
                     { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Manipulativen Post ignoriert", feedback: "💡 <b>Analyse:</b> Gut gemacht, dich nicht von der polemischen Zuspitzung triggern zu lassen." }
                 ]
             },
@@ -744,9 +651,12 @@
                 ],
                 options: [
                     { text: "📤 Teilen", bias: "neutral", isError: false, label: "Fortschritt geteilt", feedback: "💡 <b>Analyse:</b> Die Studie ist zwar echt, aber etwas schöngeredet. Das Teilen ist dennoch vertretbar." },
+                    { text: "🔍 Überprüfen", bias: "neutral", isError: false, label: "Studie im Detail geprüft", feedback: "💡 <b>Analyse:</b> Du hast die Lücken der Studie erkannt." },
                     { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Klima-Post ignoriert", feedback: "💡 <b>Analyse:</b> Neutral geblieben." }
                 ]
-            },
+            }
+        ];
+                const feedItemsPool2 = [
             {
                 id: 7, type: "feed", difficulty: "Sehr schwer (Experten-Level)",
                 author: "Global-Tech-Insights", avatar: "💡", tag: "#Technologie",
@@ -759,6 +669,7 @@
                 ],
                 options: [
                     { text: "📤 Teilen", bias: "propaganda", isError: true, label: "Gezielte Lobby-Propaganda gestreut", feedback: "💡 <b>Analyse:</b> Extrem schwerer Trick! Die Kernzahl stimmt grob, aber sie wird von einer Konkurrenzlobby instrumentalisiert." },
+                    { text: "🔍 Überprüfen", bias: "neutral", isError: false, label: "Lobby-Finanzierung enttarnt", feedback: "💡 <b>Analyse:</b> Meisterleistung! Du hast die verdeckten Sponsoren im Hintergrund entdeckt." },
                     { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Lobby-Framing umschifft", feedback: "💡 <b>Analyse:</b> Sehr stark! Du hast dich von der vermeintlichen Seriosität nicht blenden lassen." }
                 ]
             },
@@ -774,6 +685,7 @@
                 ],
                 options: [
                     { text: "📤 Teilen", bias: "propaganda", isError: true, label: "Auf Schein-Repräsentativität reingefallen", feedback: "💡 <b>Analyse:</b> Klassischer Trick: Das Wort 'repräsentativ' wird genutzt, obwohl die Umfrage völlig unseriös ist." },
+                    { text: "🔍 Überprüfen", bias: "neutral", isError: false, label: "Schwindel-Umfrage entlarvt", feedback: "💡 <b>Analyse:</b> Perfekt! Kleine Twitter-Umfragen sind eben nicht repräsentativ." },
                     { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Schein-Umfrage ignoriert", feedback: "💡 <b>Analyse:</b> Ausgezeichnet erkannt, dass hier mit gefälschter Autorität gearbeitet wird." }
                 ]
             },
@@ -789,6 +701,7 @@
                 ],
                 options: [
                     { text: "📤 Teilen", bias: "neutral", isError: false, label: "Historisches Faktum geteilt", feedback: "💡 <b>Analyse:</b> Korrektes historisches Datum." },
+                    { text: "🔍 Überprüfen", bias: "neutral", isError: false, label: "Datum verifiziert", feedback: "💡 <b>Analyse:</b> Historisch korrekt." },
                     { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Ignoriert", feedback: "💡 <b>Analyse:</b> Neutral." }
                 ]
             },
@@ -804,6 +717,7 @@
                 ],
                 options: [
                     { text: "📤 Teilen", bias: "neutral", isError: false, label: "Hilfreicher Aufruf geteilt", feedback: "💡 <b>Analyse:</b> Sinnvoller sozialer Aufruf ohne böse Absichten." },
+                    { text: "🔍 Überprüfen", bias: "neutral", isError: false, label: "Tierheim verifiziert", feedback: "💡 <b>Analyse:</b> Seriöser Aufruf." },
                     { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Tierheim-Post ignoriert", feedback: "💡 <b>Analyse:</b> Kein Problem." }
                 ]
             },
@@ -818,6 +732,7 @@
                 ],
                 options: [
                     { text: "📤 Teilen", bias: "neutral", isError: false, label: "Sachliche Studie geteilt", feedback: "💡 <b>Analyse:</b> Korrekte und belegte Fakten." },
+                    { text: "🔍 Überprüfen", bias: "neutral", isError: false, label: "Ökobilanz geprüft", feedback: "💡 <b>Analyse:</b> Fundierte Daten." },
                     { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Ignoriert", feedback: "💡 <b>Analyse:</b> Neutral." }
                 ]
             },
@@ -832,12 +747,14 @@
                 ],
                 options: [
                     { text: "📤 Teilen", bias: "propaganda", isError: true, label: "Panikmache verbreitet", feedback: "💡 <b>Analyse:</b> Typische Panikmache ohne rechtliche Grundlage." },
+                    { text: "🔍 Überprüfen", bias: "neutral", isError: false, label: "Gesetzeslage geprüft", feedback: "💡 <b>Analyse:</b> Richtig erkannt, kein wahrer Kern." },
                     { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Panik-Post ignoriert", feedback: "💡 <b>Analyse:</b> Sehr gut erkannt!" }
                 ]
             }
         ];
 
-        // CHARAKTERE OHNE QUELLENPRÜFUNG
+        feedItemsPool.push(...feedItemsPool2);
+
         const chatPool = [
             {
                 type: "chat",
@@ -859,8 +776,8 @@
                     { sender: "Opa 👴", text: "Das muss man einfach teilen, damit die Wahrheit ans Licht kommt!", type: "received" }
                 ],
                 options: [
-                    { text: "📤 Teilen", bias: "conspiracy", isError: true, label: "Verschwörung geteilt", feedback: "💡 <b>Konsequenz:</b> Du hast Opas Propaganda-Erzählung unkritisch übernommen." },
-                    { text: "👁️ Ignorieren", bias: "neutral", isError: false, label: "Post ignoriert", feedback: "💡 <b>Konsequenz:</b> Richtig entschieden – du hast den Propaganda-Post ignoriert." }
+                    { text: "📤 Opas Propaganda-Behauptung teilen", bias: "conspiracy", isError: true, label: "Opas Verschwörung geteilt", feedback: "💡 <b>Konsequenz:</b> Du hast Opas Propaganda-Erzählung unkritisch übernommen." },
+                    { text: "👁️ Opas Nachricht ignorieren", bias: "neutral", isError: false, label: "Opas Post ignoriert", feedback: "💡 <b>Konsequenz:</b> Richtig entschieden – du hast den Propaganda-Post ignoriert, ohne ihn zu streuen." }
                 ]
             },
             {
@@ -900,24 +817,11 @@
                 ]
             }
         ];
-
-        // BUNTE WERBE-ANGEBOTE
-        const adOffers = [
-            { title: "🔥 GEWINNSPIEL!", text: "Du hast iPhone 16 Pro gewonnen! Jetzt abholen!", color: "#ec4899" },
-            { title: "💰 KRONE LOTTO", text: "Werden Sie in 5 Minuten Millionär im Online-Casino!", color: "#8b5cf6" },
-            { title: "⚡ SCHNELL ABNEHMEN", text: "Geheimes Wundermittel verbrennt Fett im Schlaf!", color: "#10b981" },
-            { title: "🚨 VIREN GEFUNDEN!", text: "Ihr Smartphone ist extrem langsam! Jetzt bereinigen!", color: "#ef4444" },
-            { title: "🎁 GRATIS GUTSCHEIN", text: "500€ Amazon-Gutschein für die ersten 10 Nutzer!", color: "#f59e0b" },
-            { title: "🚀 Krypto-Booster", text: "Verdreifache dein Geld mit dieser neuen Meme-Coin!", color: "#0284c7" }
-        ];
-        </script>
-            <script>
-        let activeSequence = [];
+                let activeSequence = [];
         let currentStep = 0;
         let errorCount = 0;
         let userName = "Alex";
         let userChoices = [];
-        let hasVirus = false;
 
         const screenWelcome = document.getElementById("screen-welcome");
         const screenFeed = document.getElementById("screen-feed");
@@ -938,9 +842,6 @@
         const modalBody = document.getElementById("modal-body");
         const modalBtnNext = document.getElementById("modal-btn-next");
 
-        const adsOverlay = document.getElementById("ads-overlay");
-        const crashOverlay = document.getElementById("crash-overlay");
-
         btnStart.addEventListener("click", startSimulation);
         btnRestart.addEventListener("click", restartSimulation);
         modalBtnNext.addEventListener("click", advanceStep);
@@ -958,10 +859,9 @@
             currentStep = 0;
             errorCount = 0;
             userChoices = [];
-            hasVirus = false;
             
             buildRandomSequence();
-            triggerAdsChaos(() => renderStep());
+            renderStep();
         }
 
         function buildRandomSequence() {
@@ -976,68 +876,6 @@
                 if (shuffledChat.length > 0) activeSequence.push(shuffledChat.pop());
             }
             activeSequence.sort(() => Math.random() - 0.5);
-        }
-
-        // WERBE-CHAOS SYSTEM
-        function triggerAdsChaos(callback) {
-            adsOverlay.innerHTML = "";
-            adsOverlay.classList.add("active");
-
-            let totalAds = 6;
-            let closedCount = 0;
-
-            for (let i = 0; i < totalAds; i++) {
-                setTimeout(() => {
-                    if (!adsOverlay.classList.contains("active")) return;
-                    
-                    const adData = adOffers[Math.floor(Math.random() * adOffers.length)];
-                    const popup = document.createElement("div");
-                    popup.className = "post-card ad-popup";
-                    popup.style.borderColor = adData.color;
-                    
-                    const randomX = Math.random() * (window.innerWidth - 320);
-                    const randomY = Math.random() * (window.innerHeight - 250);
-                    popup.style.left = `${Math.max(10, randomX)}px`;
-                    popup.style.top = `${Math.max(10, randomY)}px`;
-
-                    popup.innerHTML = `
-                        <div class="ad-header" style="color: ${adData.color}">
-                            <span>${adData.title}</span>
-                            <button class="ad-close">✖</button>
-                        </div>
-                        <div class="ad-body">${adData.text}</div>
-                        <button class="ad-accept">Akzeptieren 🚀</button>
-                    `;
-
-                    popup.querySelector(".ad-close").addEventListener("click", (e) => {
-                        e.stopPropagation();
-                        popup.remove();
-                        closedCount++;
-                        if (closedCount >= totalAds) {
-                            adsOverlay.classList.remove("active");
-                            callback();
-                        }
-                    });
-
-                    popup.querySelector(".ad-accept").addEventListener("click", () => {
-                        adsOverlay.classList.remove("active");
-                        triggerSystemCrash(() => {
-                            hasVirus = true;
-                            callback();
-                        });
-                    });
-
-                    adsOverlay.appendChild(popup);
-                }, i * 200);
-            }
-        }
-
-        function triggerSystemCrash(onRecover) {
-            crashOverlay.classList.add("active");
-            setTimeout(() => {
-                crashOverlay.classList.remove("active");
-                onRecover();
-            }, 2500);
         }
 
         function renderStep() {
@@ -1098,7 +936,7 @@
 
             const btnShare = document.createElement("button");
             btnShare.className = "option-btn";
-            btnShare.innerText = "📤 Teilen";
+            btnShare.innerText = data.options[0].text;
             btnShare.addEventListener("click", () => handleChoice(data.options[0]));
             optionsContainer.appendChild(btnShare);
 
@@ -1110,29 +948,19 @@
                 btnCheck.style.opacity = "0.5";
                 btnCheck.addEventListener("click", () => {
                     document.getElementById("extra-inspection-area").innerHTML = `
-                        <div class="blocked-warning">❌ Du bist in der Filterblase gefangen!</div>
-                    `;
-                });
-            } else if (hasVirus) {
-                btnCheck.innerText = "🔍 Durch Virus nicht möglich";
-                btnCheck.style.borderColor = "var(--danger)";
-                btnCheck.style.color = "var(--danger)";
-                btnCheck.addEventListener("click", () => {
-                    errorCount++;
-                    document.getElementById("extra-inspection-area").innerHTML = `
-                        <div class="blocked-warning">⚠️ MALWARE AKTIVIERT! Der Virus hat deine Daten korrumpiert (+1 Fehlerauswertung).</div>
+                        <div class="blocked-warning">❌ Du bist zu tief in der Filterblase! Der Algorithmus blockiert die Quellenprüfung.</div>
                     `;
                 });
             } else {
-                btnCheck.innerText = "🔍 Überprüfen (Account & Kommentare ansehen)";
+                btnCheck.innerText = data.options[1].text;
                 btnCheck.addEventListener("click", () => showInspectionView(data));
             }
             optionsContainer.appendChild(btnCheck);
 
             const btnIgnore = document.createElement("button");
             btnIgnore.className = "option-btn";
-            btnIgnore.innerText = "👁️ Ignorieren";
-            btnIgnore.addEventListener("click", () => handleChoice(data.options[1]));
+            btnIgnore.innerText = data.options[2].text;
+            btnIgnore.addEventListener("click", () => handleChoice(data.options[2]));
             optionsContainer.appendChild(btnIgnore);
         }
 
@@ -1168,20 +996,19 @@
             btnShare.addEventListener("click", () => handleChoice(data.options[0]));
             optionsContainer.appendChild(btnShare);
 
+            const btnCheckDone = document.createElement("button");
+            btnCheckDone.className = "option-btn";
+            btnCheckDone.innerText = "✅ Prüfung abgeschlossen (Zurück)";
+            btnCheckDone.addEventListener("click", () => {
+                handleChoice(data.options[1]);
+            });
+            optionsContainer.appendChild(btnCheckDone);
+
             const btnIgnore = document.createElement("button");
             btnIgnore.className = "option-btn";
             btnIgnore.innerText = "👁️ Doch Ignorieren";
-            btnIgnore.addEventListener("click", () => handleChoice(data.options[1]));
+            btnIgnore.addEventListener("click", () => handleChoice(data.options[2]));
             optionsContainer.appendChild(btnIgnore);
-
-            const btnBack = document.createElement("button");
-            btnBack.className = "option-btn btn-secondary";
-            btnBack.innerText = "⬅️ Zurück zur Ansicht";
-            btnBack.addEventListener("click", () => {
-                extraArea.innerHTML = "";
-                renderMainOptions(data);
-            });
-            optionsContainer.appendChild(btnBack);
         }
 
         function handleChoice(option) {
@@ -1205,12 +1032,7 @@
         function advanceStep() {
             modalFeedback.classList.remove("active");
             currentStep++;
-            
-            if (Math.random() < 0.4 && currentStep < activeSequence.length) {
-                triggerAdsChaos(() => renderStep());
-            } else {
-                renderStep();
-            }
+            renderStep();
         }
 
         function showResults() {
@@ -1223,15 +1045,11 @@
             let summaryText = `<b>Hallo ${userName}!</b> `;
 
             if (errorCount === 0) {
-                summaryText += "🛡️ <b>Ergebnis: Propaganda-Experte!</b> Du hast alle brenzligen Situationen durchschaut und dich nicht von der Filterblase einschränken lassen.";
+                summaryText += "🛡️ <b>Ergebnis: Propaganda-Experte!</b> Du hast alle Falschmeldungen konsequent überprüft oder ignoriert und dich nie manipulieren lassen.";
             } else if (errorCount < 3) {
-                summaryText += "⚖️ <b>Ergebnis: Gut geschult!</b> Du hast ein paar Fehler gemacht, konntest dich aber noch aus dem Algorithmus befreien.";
+                summaryText += "⚖️ <b>Ergebnis: Kritischer Nutzer mit kleinen Lücken.</b> Du bist zwar wachsam gewesen, bist aber ein paarmal auf gut gemachte Falschmeldungen reingefallen.";
             } else {
-                summaryText += "⚡ <b>Ergebnis: Gefangen in der Echokammer!</b> Du hast 3 oder mehr Fehler gemacht. Der Algorithmus hat dir den Zugang zur Faktenprüfung verwehrt.";
-            }
-
-            if (hasVirus) {
-                summaryText += "<br><span style='color:var(--danger);'>⚠️ Du hattest dir zudem einen System-Virus eingefangen!</span>";
+                summaryText += "⚡ <b>Ergebnis: Voll in der Filterblase gefangen!</b> Da du zu oft ungeprüft Falschmeldungen geteilt hast, hat der Algorithmus deine Ansichten stark verengt.";
             }
 
             summaryElem.innerHTML = summaryText;
@@ -1262,7 +1080,6 @@
             screenWelcome.classList.add("active");
             progressFill.style.width = "0%";
             errorCount = 0;
-            hasVirus = false;
         }
     </script>
 </body>
